@@ -3,7 +3,9 @@ name: CI
 on:
   push:
     branches: [dev]
+    paths-ignore: ["**.md"]
   pull_request:
+    paths-ignore: ["**.md"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
