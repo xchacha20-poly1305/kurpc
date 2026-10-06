@@ -1,0 +1,29 @@
+# Rust
+# Cargo.lock is tracked: the workspace ships a cdylib and a test server binary.
+/target/
+
+# Gradle / Kotlin
+.gradle/
+.kotlin/
+build/
+local.properties
+
+# Android
+.cxx/
+.externalNativeBuild/
+/captures/
+
+# Native libraries copied into source sets by the build
+jniLibs/
+
+# Publishing secrets
+*.gpg
+*.asc
+secring.*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+

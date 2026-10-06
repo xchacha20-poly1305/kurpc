@@ -1,0 +1,27 @@
+[package]
+name = "kurpc-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+bytes = { workspace = true }
+# Only to name the RST_STREAM reason of an abandoned request stream; hyper already uses it.
+h2 = { workspace = true }
+http = { workspace = true }
+hyper = { workspace = true, default-features = false }
+hyper-util = { workspace = true, features = ["tokio"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "io-util", "time", "sync"] }
+tonic = { workspace = true, features = ["channel"] }
+# Only for the `Stream` trait of request bodies; tonic already depends on it.
+tokio-stream = { workspace = true, default-features = false }
+tower = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+kurpc-testserver = { workspace = true }
+tokio = { workspace = true, features = ["macros"] }

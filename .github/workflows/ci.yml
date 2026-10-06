@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: cargo fmt --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+      # jvmTest on JDK 21 and (provisioned) JDK 8, Android Lint, ABI dump.
+      - run: ./gradlew :kurpc:check
+
+  cross:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          zig: "true"
+      - run: ./gradlew -Pkurpc.targets=all :kurpc:nativesJars :kurpc:assemble
+      - uses: actions/upload-artifact@v4
+        with:
+          name: natives
+          path: |
+            kurpc/build/libs/kurpc-natives-jvm-*.jar
+            kurpc/build/outputs/aar/*.aar
+
+  platform-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # Real Unix sockets on macOS, named pipes on Windows.
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: cargo test --workspace
+      - run: ./gradlew :kurpc:jvmTest :kurpc:jvmTestJava8
+
+  android:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - api: 21
+            arch: x86
+          - api: 35
+            arch: x86_64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      # Only the emulator's ABI: the device-test APK carries a test server per selected ABI.
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          arch: ${{ matrix.arch }}
+          script: ./gradlew -Pkurpc.targets=android-${{ matrix.arch }} :kurpc:connectedAndroidDeviceTest

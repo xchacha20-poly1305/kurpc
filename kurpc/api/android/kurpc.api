@@ -1,0 +1,260 @@
+public final class io/github/xchacha20_poly1305/kurpc/CallOptions {
+	public fun <init> ()V
+	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-FghU774 ()Lkotlin/time/Duration;
+	public final fun component2 ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun component3 ()Z
+	public final fun copy-k1IrOU0 (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;Z)Lio/github/xchacha20_poly1305/kurpc/CallOptions;
+	public static synthetic fun copy-k1IrOU0$default (Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/CallOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMetadata ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun getTimeout-FghU774 ()Lkotlin/time/Duration;
+	public final fun getWaitForReady ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Channel : java/lang/AutoCloseable {
+	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;)V
+	public final fun bidiStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun bidiStreaming$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public final fun clientStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun clientStreaming$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun close ()V
+	public final fun serverStreaming (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun serverStreaming$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public final fun unary (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun unary$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun unaryCall (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun unaryCall$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/ChannelClosedException : java/lang/RuntimeException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/ChannelConfig {
+	public synthetic fun <init> (Lio/github/xchacha20_poly1305/kurpc/Transport;Ljava/lang/String;ZLio/github/xchacha20_poly1305/kurpc/Metadata;JLio/github/xchacha20_poly1305/kurpc/KeepAlive;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lio/github/xchacha20_poly1305/kurpc/Transport;Ljava/lang/String;ZLio/github/xchacha20_poly1305/kurpc/Metadata;JLio/github/xchacha20_poly1305/kurpc/KeepAlive;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lio/github/xchacha20_poly1305/kurpc/Transport;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun component5-UwyO8pc ()J
+	public final fun component6 ()Lio/github/xchacha20_poly1305/kurpc/KeepAlive;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy-TUY-ock (Lio/github/xchacha20_poly1305/kurpc/Transport;Ljava/lang/String;ZLio/github/xchacha20_poly1305/kurpc/Metadata;JLio/github/xchacha20_poly1305/kurpc/KeepAlive;Ljava/lang/String;)Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;
+	public static synthetic fun copy-TUY-ock$default (Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;Lio/github/xchacha20_poly1305/kurpc/Transport;Ljava/lang/String;ZLio/github/xchacha20_poly1305/kurpc/Metadata;JLio/github/xchacha20_poly1305/kurpc/KeepAlive;Ljava/lang/String;ILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAuthority ()Ljava/lang/String;
+	public final fun getConnectTimeout-UwyO8pc ()J
+	public final fun getKeepAlive ()Lio/github/xchacha20_poly1305/kurpc/KeepAlive;
+	public final fun getMetadata ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun getSecure ()Z
+	public final fun getTransport ()Lio/github/xchacha20_poly1305/kurpc/Transport;
+	public final fun getUserAgent ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/github/xchacha20_poly1305/kurpc/Connection {
+	public static final field Companion Lio/github/xchacha20_poly1305/kurpc/Connection$Companion;
+	public abstract fun close (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun read ([BIILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun write ([BIILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Connection$Companion {
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/ConnectionsKt {
+	public static final fun of (Lio/github/xchacha20_poly1305/kurpc/Connection$Companion;Ljava/io/InputStream;Ljava/io/OutputStream;)Lio/github/xchacha20_poly1305/kurpc/Connection;
+	public static final fun of (Lio/github/xchacha20_poly1305/kurpc/Connection$Companion;Ljava/nio/channels/ByteChannel;)Lio/github/xchacha20_poly1305/kurpc/Connection;
+}
+
+public abstract interface class io/github/xchacha20_poly1305/kurpc/Connector {
+	public abstract fun connect (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class io/github/xchacha20_poly1305/kurpc/FdConnector {
+	public abstract fun connect (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/KeepAlive {
+	public synthetic fun <init> (JJZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-UwyO8pc ()J
+	public final fun component2-UwyO8pc ()J
+	public final fun component3 ()Z
+	public final fun copy-NqJ4yvY (JJZ)Lio/github/xchacha20_poly1305/kurpc/KeepAlive;
+	public static synthetic fun copy-NqJ4yvY$default (Lio/github/xchacha20_poly1305/kurpc/KeepAlive;JJZILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/KeepAlive;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInterval-UwyO8pc ()J
+	public final fun getTimeout-UwyO8pc ()J
+	public final fun getWhileIdle ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Kurpc {
+	public static final field INSTANCE Lio/github/xchacha20_poly1305/kurpc/Kurpc;
+	public final fun configure (I)V
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/LocalSocketConnectionKt {
+	public static final fun of (Lio/github/xchacha20_poly1305/kurpc/Connection$Companion;Landroid/net/LocalSocket;)Lio/github/xchacha20_poly1305/kurpc/Connection;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Metadata {
+	public static final field Companion Lio/github/xchacha20_poly1305/kurpc/Metadata$Companion;
+	public final fun binary (Ljava/lang/String;)[B
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntries ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun isEmpty ()Z
+	public final fun plus (Lio/github/xchacha20_poly1305/kurpc/Metadata;)Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun text (Ljava/lang/String;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Metadata$Companion {
+	public final fun getEmpty ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun of ([Lkotlin/Pair;)Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun ofBinary ([Lkotlin/Pair;)Lio/github/xchacha20_poly1305/kurpc/Metadata;
+}
+
+public abstract class io/github/xchacha20_poly1305/kurpc/Metadata$Value {
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Metadata$Value$Binary : io/github/xchacha20_poly1305/kurpc/Metadata$Value {
+	public fun <init> ([B)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBytes ()[B
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Metadata$Value$Text : io/github/xchacha20_poly1305/kurpc/Metadata$Value {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Status {
+	public static final field INSTANCE Lio/github/xchacha20_poly1305/kurpc/Status;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Status$Code : java/lang/Enum {
+	public static final field ABORTED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field ALREADY_EXISTS Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field CANCELLED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field Companion Lio/github/xchacha20_poly1305/kurpc/Status$Code$Companion;
+	public static final field DATA_LOSS Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field DEADLINE_EXCEEDED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field FAILED_PRECONDITION Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field INTERNAL Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field INVALID_ARGUMENT Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field NOT_FOUND Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field OK Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field OUT_OF_RANGE Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field PERMISSION_DENIED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field RESOURCE_EXHAUSTED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field UNAUTHENTICATED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field UNAVAILABLE Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field UNIMPLEMENTED Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static final field UNKNOWN Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()I
+	public static fun valueOf (Ljava/lang/String;)Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public static fun values ()[Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Status$Code$Companion {
+	public final fun fromValue (I)Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/StatusException : java/lang/RuntimeException {
+	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/Status$Code;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/Metadata;)V
+	public final fun getCode ()Lio/github/xchacha20_poly1305/kurpc/Status$Code;
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getDetails ()[B
+	public final fun getTrailers ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/TlsKt {
+	public static final fun tls (Lio/github/xchacha20_poly1305/kurpc/Connection$Companion;Ljava/net/Socket;Ljava/lang/String;Ljavax/net/ssl/SSLSocketFactory;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun tls$default (Lio/github/xchacha20_poly1305/kurpc/Connection$Companion;Ljava/net/Socket;Ljava/lang/String;Ljavax/net/ssl/SSLSocketFactory;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class io/github/xchacha20_poly1305/kurpc/Transport {
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Transport$Custom : io/github/xchacha20_poly1305/kurpc/Transport {
+	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/Connector;)V
+	public final fun getConnector ()Lio/github/xchacha20_poly1305/kurpc/Connector;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Transport$FileDescriptor : io/github/xchacha20_poly1305/kurpc/Transport {
+	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/FdConnector;)V
+	public final fun getConnector ()Lio/github/xchacha20_poly1305/kurpc/FdConnector;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Transport$Tcp : io/github/xchacha20_poly1305/kurpc/Transport {
+	public fun <init> (Ljava/lang/String;I)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun copy (Ljava/lang/String;I)Lio/github/xchacha20_poly1305/kurpc/Transport$Tcp;
+	public static synthetic fun copy$default (Lio/github/xchacha20_poly1305/kurpc/Transport$Tcp;Ljava/lang/String;IILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/Transport$Tcp;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHost ()Ljava/lang/String;
+	public final fun getPort ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Transport$Unix : io/github/xchacha20_poly1305/kurpc/Transport {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/xchacha20_poly1305/kurpc/Transport$Unix;
+	public static synthetic fun copy$default (Lio/github/xchacha20_poly1305/kurpc/Transport$Unix;Ljava/lang/String;ILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/Transport$Unix;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Transport$WindowsNamedPipe : io/github/xchacha20_poly1305/kurpc/Transport {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/github/xchacha20_poly1305/kurpc/Transport$WindowsNamedPipe;
+	public static synthetic fun copy$default (Lio/github/xchacha20_poly1305/kurpc/Transport$WindowsNamedPipe;Ljava/lang/String;ILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/Transport$WindowsNamedPipe;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/TransportException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/UnaryResponse {
+	public fun <init> ([BLio/github/xchacha20_poly1305/kurpc/Metadata;Lio/github/xchacha20_poly1305/kurpc/Metadata;)V
+	public final fun component1 ()[B
+	public final fun component2 ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun component3 ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun copy ([BLio/github/xchacha20_poly1305/kurpc/Metadata;Lio/github/xchacha20_poly1305/kurpc/Metadata;)Lio/github/xchacha20_poly1305/kurpc/UnaryResponse;
+	public static synthetic fun copy$default (Lio/github/xchacha20_poly1305/kurpc/UnaryResponse;[BLio/github/xchacha20_poly1305/kurpc/Metadata;Lio/github/xchacha20_poly1305/kurpc/Metadata;ILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/UnaryResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHeaders ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public final fun getMessage ()[B
+	public final fun getTrailers ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

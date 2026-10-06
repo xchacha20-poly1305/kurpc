@@ -1,0 +1,34 @@
+[workspace]
+resolver = "3"
+members = ["native/kurpc-core", "native/kurpc-jni", "native/kurpc-testserver"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/xchacha20-poly1305/kurpc"
+rust-version = "1.85"
+
+[workspace.dependencies]
+kurpc-core = { path = "native/kurpc-core" }
+kurpc-testserver = { path = "native/kurpc-testserver" }
+
+base64 = "0.22"
+bytes = "1"
+h2 = { version = "0.4", default-features = false }
+http = "1"
+http-body-util = "0.1"
+hyper = "1"
+hyper-util = "0.1"
+jni = "0.22"
+tokio = "1"
+tokio-stream = "0.1"
+tonic = { version = "0.14", default-features = false }
+tower = "0.5"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+panic = "unwind"
+strip = "symbols"
+opt-level = "s"

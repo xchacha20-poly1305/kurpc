@@ -1,0 +1,19 @@
+[package]
+name = "kurpc-testserver"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+bytes = { workspace = true }
+http = { workspace = true }
+kurpc-core = { workspace = true }
+rcgen = "0.13"
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "io-std", "io-util", "time", "sync"] }
+tokio-stream = { workspace = true, features = ["net"] }
+tonic = { workspace = true, features = ["server", "router", "tls-ring"] }
+tower = { workspace = true, features = ["util"] }
