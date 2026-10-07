@@ -30,6 +30,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           zig: "true"
+          ndk: "true"
       - run: ./gradlew -Pkurpc.targets=all :kurpc:nativesJars :kurpc:assemble
       - uses: actions/upload-artifact@v4
         with:
@@ -64,6 +65,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+        with:
+          ndk: "true"
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

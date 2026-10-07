@@ -13,6 +13,8 @@ protobuf-javalite, Wire, kotlinx-serialization-protobuf, ...).
 - Transports: TCP, Unix domain sockets (including Linux abstract sockets), Windows named pipes, a
   file descriptor, or any byte stream you provide (TLS is provided this way).
 
+I forget why I named it "kurpc". "u" may be "you", you can customize it. Or means Unix domain socket.
+
 ## Platforms
 
 | Target  | Requirement                                   | Native library                             |

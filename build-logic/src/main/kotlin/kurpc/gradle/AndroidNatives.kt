@@ -103,7 +103,8 @@ private fun CargoBuildTask.configureAndroidCargo(
 
 /**
  * Linker, C compiler (ring in the device-test server builds C and assembly) and archiver from
- * the NDK, plus 16 KB page alignment for Android 15+ devices (plan §6.1).
+ * the NDK. NDK r28+ links 64-bit ABIs with 16 KB page alignment by default, which is what
+ * Android 15+ devices need; 32-bit ABIs never run on 16 KB page kernels.
  */
 private fun ndkEnvironment(ndk: Directory, abi: AndroidAbi): Map<String, String> {
     val windows = System.getProperty("os.name").startsWith("Windows")
@@ -119,7 +120,6 @@ private fun ndkEnvironment(ndk: Directory, abi: AndroidAbi): Map<String, String>
     val ccTriple = abi.triple.replace('-', '_')
     return mapOf(
         "CARGO_TARGET_${cargoTriple}_LINKER" to clang,
-        "CARGO_TARGET_${cargoTriple}_RUSTFLAGS" to "-C link-arg=-Wl,-z,max-page-size=16384",
         "CC_$ccTriple" to clang,
         "AR_$ccTriple" to archiver,
     )

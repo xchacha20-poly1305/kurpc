@@ -1,6 +1,10 @@
 name: Set up kurpc build
-description: Rust toolchain from rust-toolchain.toml, JDK 21, Gradle, and optionally zig.
+description: >-
+  Rust toolchain from rust-toolchain.toml, JDK 21, Gradle, and optionally zig and the Android NDK.
 inputs:
+  ndk:
+    description: Install the NDK version pinned in gradle/libs.versions.toml.
+    default: "false"
   zig:
     description: Install zig and the cargo-zigbuild revision that links macOS targets.
     default: "false"
@@ -17,6 +21,14 @@ runs:
         distribution: temurin
         java-version: "21"
         cache: gradle
+    - name: Android NDK
+      if: inputs.ndk == 'true'
+      shell: bash
+      # Runner images pick up new NDKs only after a staged rollout, so the build cannot rely on
+      # the pinned version being preinstalled. sdkmanager returns at once when it already is.
+      run: |
+        version=$(sed -n 's/^ndk = "\(.*\)"$/\1/p' gradle/libs.versions.toml)
+        "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;$version" > /dev/null
     - uses: mlugg/setup-zig@v2
       if: inputs.zig == 'true'
       with:

@@ -1,8 +1,6 @@
 # kurpc
 
 Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library over JNI.
-`plan.md` is the design; read the sections relevant to your task before changing code, and
-update it when the implementation deliberately departs from it.
 
 ## Layout
 
@@ -49,6 +47,3 @@ update it when the implementation deliberately departs from it.
 - `commonMain` uses only Kotlin stdlib and kotlinx-coroutines types.
 - `NativeBridge` is an `object`; its `external fun` members must not be `internal`.
 
-## Commits
-
-One commit per completed, tested step. Do not commit build outputs.

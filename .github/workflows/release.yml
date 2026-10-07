@@ -19,6 +19,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           zig: "true"
+          ndk: "true"
       # Every target cross-compiles from Linux, so one job builds and publishes everything.
       - run: >-
           ./gradlew -Pkurpc.targets=all
