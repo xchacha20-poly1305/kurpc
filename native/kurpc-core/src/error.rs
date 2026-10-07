@@ -94,9 +94,11 @@ fn transport_source(status: &Status) -> Option<&(dyn StdError + 'static)> {
 ///   belongs to a custom transport's dial, so a bad certificate or server name is a dial
 ///   error and still a connect failure.
 /// - With a connect timeout (kurpc always sets one), `hyper_timeout::TimeoutConnector`
-///   wraps that connector. A timeout becomes `io::ErrorKind::TimedOut` whose source is
+///   wraps that connector. A timeout becomes an `io::ErrorKind::TimedOut` wrapping
 ///   `tokio::time::error::Elapsed`, and `ConnectError` is absent, because the timeout
-///   drops the connector future. Nothing was written.
+///   drops the connector future. Nothing was written. The `Elapsed` is reached through
+///   `io::Error::get_ref`: `io::Error::source` skips the wrapped error and returns its
+///   source instead.
 /// - `Reconnect` with `is_lazy: true` does not fail `poll_ready` on that error. It
 ///   stores it and `call()` returns it without sending the HTTP request. The next
 ///   `poll_ready` dials again.
@@ -121,8 +123,8 @@ pub(crate) fn is_connect_failure(error: &(dyn StdError + 'static)) -> bool {
         if let Some(io) = error.downcast_ref::<std::io::Error>()
             && io.kind() == std::io::ErrorKind::TimedOut
             && io
-                .source()
-                .is_some_and(|source| source.is::<tokio::time::error::Elapsed>())
+                .get_ref()
+                .is_some_and(|inner| inner.is::<tokio::time::error::Elapsed>())
         {
             return true;
         }
