@@ -3,9 +3,10 @@
 Kotlin Multiplatform gRPC client backed by a native library built from
 [grpc-rust](https://github.com/grpc/grpc-rust) (tonic), called over JNI.
 
-kurpc moves raw message bytes. It does not generate stubs or serialize messages: you pass the
-encoded request and receive the encoded response, so any protobuf runtime works (protobuf-java,
-protobuf-javalite, Wire, kotlinx-serialization-protobuf, ...).
+kurpc moves raw message bytes: you pass the encoded request and receive the encoded response,
+so any protobuf runtime works (protobuf-java, protobuf-javalite, Wire,
+kotlinx-serialization-protobuf, ...). For protobuf-java and protobuf-javalite messages, the
+`protoc-gen-kurpc` plugin generates typed clients ([Generated clients](#generated-clients)).
 
 - Unary, server-streaming, client-streaming and bidirectional calls as `suspend` functions and
   `Flow`s. Cancelling the coroutine cancels the call.
@@ -198,6 +199,86 @@ channel.bidiStreaming("/example.Chat/Talk", outgoing).collect { bytes ->
 }
 ```
 
+### Generated clients
+
+`protoc-gen-kurpc` is a protoc plugin that generates a client per service for the classes of
+protobuf-java or protobuf-javalite (proto2 and proto3; editions are not supported). With the
+[protobuf Gradle plugin](https://github.com/google/protobuf-gradle-plugin), in a JVM or Android
+module:
+
+```kotlin
+// build.gradle.kts
+import com.google.protobuf.gradle.id
+
+plugins {
+    id("com.google.protobuf") version "0.10.0"
+}
+
+dependencies {
+    implementation(libs.kurpc)
+    implementation("com.google.protobuf:protobuf-javalite:4.36.1")
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.36.1"
+    }
+    plugins {
+        id("kurpc") {
+            // The `all` jar is self-contained; the plugin runs it with `java -jar`.
+            artifact = "io.github.xchacha20-poly1305:protoc-gen-kurpc:0.1.1:all@jar"
+        }
+    }
+    generateProtoTasks {
+        all().configureEach {
+            builtins {
+                named("java") { option("lite") }
+            }
+            plugins {
+                id("kurpc")
+            }
+        }
+    }
+}
+```
+
+For `service Greeter` in package `helloworld`, the plugin writes `GreeterKurpc.kt` into the
+Java package of the proto file, with:
+
+- `GreeterClient(invoker: CallInvoker)`: one function per method. Unary and client-streaming
+  methods are `suspend` functions; server-streaming and bidirectional methods return a `Flow`.
+  Every function takes an optional `CallOptions`.
+- `GreeterKurpc`: `SERVICE_NAME` and a `MethodDescriptor` per method (`GreeterKurpc.sayHello`).
+
+```kotlin
+val greeter = GreeterClient(channel)
+val reply: HelloReply = greeter.sayHello(
+    HelloRequest.newBuilder().setName("kurpc").build(),
+    CallOptions(timeout = 5.seconds),
+)
+```
+
+`Channel` implements `CallInvoker`. A test can pass its own `CallInvoker` to the generated client
+instead of opening a channel.
+
+The descriptors also work without the generated client, through the typed `unary`,
+`serverStreaming`, `clientStreaming` and `bidiStreaming` extensions of `CallInvoker`, for
+example in a wrapper that retries every stream the same way:
+
+```kotlin
+fun <Request, Response> CallInvoker.retrying(
+    method: MethodDescriptor<Request, Response>,
+    request: Request,
+): Flow<Response> = serverStreaming(method, request).retry { it is TransportException }
+```
+
+A response that its message class cannot parse fails the call with a `StatusException` of
+`INTERNAL`, whose cause is the parser's exception.
+
+Outside Gradle, run the jar through a wrapper script, for example
+`protoc --plugin=protoc-gen-kurpc=./protoc-gen-kurpc.sh --kurpc_out=src/main/kotlin ...`, where
+the script runs `java -jar protoc-gen-kurpc-0.1.1-all.jar "$@"`.
+
 ### Deadlines and metadata
 
 ```kotlin
@@ -305,6 +386,7 @@ NDK version from `gradle/libs.versions.toml`.
 
 ```sh
 ./gradlew :kurpc:check        # JVM tests on JDK 21 and JDK 8, Android Lint
+./gradlew :protoc-gen-kurpc:check  # protoc plugin; its tests call the test server through generated clients
 cargo test --workspace         # Rust tests
 make publish_local             # publishToMavenLocal for the host platform
 make native_all                # every natives jar and the AAR; needs cargo-zigbuild

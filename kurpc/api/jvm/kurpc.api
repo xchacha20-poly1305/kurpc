@@ -1,3 +1,24 @@
+public abstract interface class io/github/xchacha20_poly1305/kurpc/CallInvoker {
+	public abstract fun bidiStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun bidiStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun clientStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun clientStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun serverStreaming (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun serverStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun unary (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun unary$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun unaryCall (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun unaryCall$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/CallInvoker$DefaultImpls {
+	public static synthetic fun bidiStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun clientStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun serverStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun unary$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun unaryCall$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
 public final class io/github/xchacha20_poly1305/kurpc/CallOptions {
 	public fun <init> ()V
 	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -15,19 +36,14 @@ public final class io/github/xchacha20_poly1305/kurpc/CallOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class io/github/xchacha20_poly1305/kurpc/Channel : java/lang/AutoCloseable {
+public final class io/github/xchacha20_poly1305/kurpc/Channel : io/github/xchacha20_poly1305/kurpc/CallInvoker, java/lang/AutoCloseable {
 	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;)V
-	public final fun bidiStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun bidiStreaming$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
-	public final fun clientStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun clientStreaming$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun bidiStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public fun clientStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun close ()V
-	public final fun serverStreaming (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun serverStreaming$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
-	public final fun unary (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun unary$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public final fun unaryCall (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun unaryCall$default (Lio/github/xchacha20_poly1305/kurpc/Channel;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun serverStreaming (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public fun unary (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun unaryCall (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class io/github/xchacha20_poly1305/kurpc/ChannelClosedException : java/lang/RuntimeException {
@@ -104,6 +120,11 @@ public final class io/github/xchacha20_poly1305/kurpc/Kurpc {
 	public final fun configure (I)V
 }
 
+public abstract interface class io/github/xchacha20_poly1305/kurpc/MessageCodec {
+	public abstract fun decode ([B)Ljava/lang/Object;
+	public abstract fun encode (Ljava/lang/Object;)[B
+}
+
 public final class io/github/xchacha20_poly1305/kurpc/Metadata {
 	public static final field Companion Lio/github/xchacha20_poly1305/kurpc/Metadata$Companion;
 	public final fun binary (Ljava/lang/String;)[B
@@ -139,6 +160,25 @@ public final class io/github/xchacha20_poly1305/kurpc/Metadata$Value$Text : io/g
 	public final fun getText ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/MethodDescriptor {
+	public fun <init> (Ljava/lang/String;Lio/github/xchacha20_poly1305/kurpc/MessageCodec;Lio/github/xchacha20_poly1305/kurpc/MessageCodec;)V
+	public final fun getPath ()Ljava/lang/String;
+	public final fun getRequestCodec ()Lio/github/xchacha20_poly1305/kurpc/MessageCodec;
+	public final fun getResponseCodec ()Lio/github/xchacha20_poly1305/kurpc/MessageCodec;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/MethodKt {
+	public static final fun bidiStreaming (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun bidiStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clientStreaming (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun clientStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun serverStreaming (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun serverStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun unary (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun unary$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class io/github/xchacha20_poly1305/kurpc/NativeLibraryKt {
@@ -179,7 +219,8 @@ public final class io/github/xchacha20_poly1305/kurpc/Status$Code$Companion {
 }
 
 public final class io/github/xchacha20_poly1305/kurpc/StatusException : java/lang/RuntimeException {
-	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/Status$Code;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/Metadata;)V
+	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/Status$Code;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/Metadata;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lio/github/xchacha20_poly1305/kurpc/Status$Code;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/Metadata;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getCode ()Lio/github/xchacha20_poly1305/kurpc/Status$Code;
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getDetails ()[B

@@ -10,8 +10,6 @@ plugins {
     id("kurpc.native")
 }
 
-group = "io.github.xchacha20-poly1305"
-
 // jvmMain reads this. Generating it keeps the extraction directory's version in step with the
 // project version without a hand-copied constant.
 val generateKurpcVersion = tasks.register("generateKurpcVersion") {
@@ -83,7 +81,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
+            // api, because Channel and the typed calls take and return Flow.
+            api(libs.kotlinx.coroutines.core)
         }
         val jniMain = create("jniMain") {
             dependsOn(commonMain.get())
@@ -116,26 +115,9 @@ mavenPublishing {
         signAllPublications()
     }
     coordinates(group.toString(), "kurpc", version.toString())
+    // The rest of the POM is shared with protoc-gen-kurpc, in the root gradle.properties.
     pom {
         name.set("kurpc")
         description.set("Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library.")
-        url.set("https://github.com/xchacha20-poly1305/kurpc")
-        licenses {
-            license {
-                name.set("MIT")
-                url.set("https://opensource.org/licenses/MIT")
-            }
-        }
-        developers {
-            developer {
-                id.set("xchacha20-poly1305")
-                url.set("https://github.com/xchacha20-poly1305")
-            }
-        }
-        scm {
-            url.set("https://github.com/xchacha20-poly1305/kurpc")
-            connection.set("scm:git:https://github.com/xchacha20-poly1305/kurpc.git")
-            developerConnection.set("scm:git:ssh://git@github.com/xchacha20-poly1305/kurpc.git")
-        }
     }
 }

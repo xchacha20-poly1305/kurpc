@@ -21,17 +21,18 @@ aar:
 
 test:
 	cargo test --workspace
-	$(GRADLE) $(GRADLE_ARGS) :kurpc:jvmTest
+	$(GRADLE) $(GRADLE_ARGS) :kurpc:jvmTest :protoc-gen-kurpc:test
 
 lint:
 	cargo fmt --check
 	cargo clippy --workspace --all-targets -- -D warnings
 	$(GRADLE) $(GRADLE_ARGS) :kurpc:lint :kurpc:checkKotlinAbi
 
-# Everything CI's check job runs: Rust checks, jvmTest on JDK 21 and 8, Lint, ABI.
+# Everything CI's check job runs: Rust checks, jvmTest on JDK 21 and 8, Lint, ABI, the protoc
+# plugin's tests.
 check: lint
 	cargo test --workspace
-	$(GRADLE) $(GRADLE_ARGS) :kurpc:check
+	$(GRADLE) $(GRADLE_ARGS) :kurpc:check :protoc-gen-kurpc:check
 
 publish_local:
 	$(GRADLE) $(GRADLE_ARGS) publishToMavenLocal

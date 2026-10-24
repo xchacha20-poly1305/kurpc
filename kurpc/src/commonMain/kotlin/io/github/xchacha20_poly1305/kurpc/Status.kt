@@ -39,7 +39,8 @@ public class StatusException(
     public val description: String,
     public val details: ByteArray,
     public val trailers: Metadata,
-) : RuntimeException("status $code: $description")
+    cause: Throwable? = null,
+) : RuntimeException("status $code: $description", cause)
 
 public class TransportException(message: String) : RuntimeException(message)
 

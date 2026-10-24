@@ -27,7 +27,7 @@ private const val FAILURE_TRANSPORT: Int = 1
 private const val FAILURE_CLOSED: Int = 2
 private const val FAILURE_INVALID_ARGUMENT: Int = 3
 
-public actual class Channel actual constructor(config: ChannelConfig) : AutoCloseable {
+public actual class Channel actual constructor(config: ChannelConfig) : CallInvoker, AutoCloseable {
     private val lock = Any()
     private val handle: NativeHandle
     private var closed = false
@@ -50,31 +50,31 @@ public actual class Channel actual constructor(config: ChannelConfig) : AutoClos
         }
     }
 
-    public actual suspend fun unary(
+    override suspend fun unary(
         method: String,
         request: ByteArray,
         options: CallOptions,
     ): ByteArray = unaryCall(method, request, options).message
 
-    public actual suspend fun unaryCall(
+    override suspend fun unaryCall(
         method: String,
         request: ByteArray,
         options: CallOptions,
     ): UnaryResponse = singleResponse(method, request, null, options)
 
-    public actual suspend fun clientStreaming(
+    override suspend fun clientStreaming(
         method: String,
         requests: Flow<ByteArray>,
         options: CallOptions,
     ): ByteArray = singleResponse(method, null, requests, options).message
 
-    public actual fun serverStreaming(
+    override fun serverStreaming(
         method: String,
         request: ByteArray,
         options: CallOptions,
     ): Flow<ByteArray> = streamResponse(method, request, null, options)
 
-    public actual fun bidiStreaming(
+    override fun bidiStreaming(
         method: String,
         requests: Flow<ByteArray>,
         options: CallOptions,

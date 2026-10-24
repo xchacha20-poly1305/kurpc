@@ -28,7 +28,11 @@ public data class CallOptions(
     public val waitForReady: Boolean = true,
 )
 
-public expect class Channel public constructor(config: ChannelConfig) : AutoCloseable {
+/**
+ * The calls of a gRPC client, on encoded messages. [Channel] is the implementation; generated
+ * clients take this interface, so a test can hand them a fake instead of a channel.
+ */
+public interface CallInvoker {
     /**
      * The response body. Empty protobuf messages are empty arrays, never null.
      */
@@ -75,6 +79,8 @@ public expect class Channel public constructor(config: ChannelConfig) : AutoClos
         requests: Flow<ByteArray>,
         options: CallOptions = CallOptions(),
     ): Flow<ByteArray>
+}
 
+public expect class Channel public constructor(config: ChannelConfig) : CallInvoker, AutoCloseable {
     override fun close()
 }

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+// No java_package: the proto package is the Java package.
+package kurpc.test.names;
+
+import "kurpc/test/test.proto";
+
+option java_multiple_files = true;
+
+message Outer {
+  message Inner {
+    int32 value = 1;
+  }
+}
+
+// Method names that are not plain Kotlin identifiers once lowered.
+service NameRules {
+  option deprecated = true;
+
+  rpc URLTest(Outer.Inner) returns (Outer);
+
+  /* Becomes `in`, a keyword. */
+  rpc In(kurpc.test.Payload) returns (kurpc.test.Payload);
+
+  rpc get_value(Outer) returns (Outer.Inner) {
+    option deprecated = true;
+  }
+}

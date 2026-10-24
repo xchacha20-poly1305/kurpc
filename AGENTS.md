@@ -10,6 +10,10 @@ Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library over JN
 - `kurpc/`: KMP module. `commonMain` → `jniMain` → `jvmMain` / `androidMain`; tests in `jvmTest`
   (testserver subprocess) and `androidDeviceTest` (testserver packaged in the test APK).
 - `build-logic/`: convention plugin `kurpc.native` with `CargoBuildTask` (host and Android natives).
+- `protoc-gen-kurpc/`: protoc plugin (Kotlin/JVM, KotlinPoet) generating clients for protobuf-java
+  messages on `CallInvoker` / `MethodDescriptor` from `commonMain`. Published as a plain jar plus
+  the runnable `all` jar. Its tests compile `src/test/proto` with the plugin itself and call
+  `kurpc-testserver` through the generated clients, using `:kurpc`'s host cargo outputs.
 
 ## Commands
 
@@ -17,6 +21,7 @@ Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library over JN
 - `cargo clippy --workspace --all-targets -- -D warnings`
 - `cargo fmt --check`
 - `./gradlew :kurpc:check`: jvmTest on JDK 21 and JDK 8, Android Lint (`NewApi`).
+- `./gradlew :protoc-gen-kurpc:check`: generator unit tests and generated clients end to end.
 - `./gradlew :kurpc:assemble :kurpc:assembleAndroidTest`: AAR with four ABIs, device-test APK;
   `connectedAndroidDeviceTest` needs a device or emulator.
 - `make check` runs what CI's check job runs; `make native_all` builds every natives jar and the AAR.

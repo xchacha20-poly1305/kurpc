@@ -23,7 +23,7 @@ jobs:
       # Every target cross-compiles from Linux, so one job builds and publishes everything.
       - run: >-
           ./gradlew -Pkurpc.targets=all
-          :kurpc:check publishToMavenCentral
+          :kurpc:check :protoc-gen-kurpc:check publishToMavenCentral
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
