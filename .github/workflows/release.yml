@@ -21,9 +21,11 @@ jobs:
           zig: "true"
           ndk: "true"
       # Every target cross-compiles from Linux, so one job builds and publishes everything.
+      # The release task also publishes the Central Portal deployment; the plain upload task
+      # would leave it waiting for a manual release.
       - run: >-
           ./gradlew -Pkurpc.targets=all
-          :kurpc:check :protoc-gen-kurpc:check publishToMavenCentral
+          :kurpc:check :protoc-gen-kurpc:check publishAndReleaseToMavenCentral
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
