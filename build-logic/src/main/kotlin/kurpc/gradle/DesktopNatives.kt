@@ -66,7 +66,7 @@ internal class TargetSelection(val desktop: List<DesktopTarget>, val android: Li
  * with its classifier. The library sits at the resource path `NativeLibrary` extracts from.
  *
  * cargo-zigbuild is called directly; `-Pkurpc.zigbuild=<path>` picks a specific build (macOS
- * targets need one newer than 0.23.4, plan §6.2).
+ * targets need 0.24.0 or newer, plan §6.2).
  */
 internal fun registerDesktopNatives(
     project: Project,

@@ -6,7 +6,7 @@ inputs:
     description: Install the NDK version pinned in gradle/libs.versions.toml.
     default: "false"
   zig:
-    description: Install zig and the cargo-zigbuild revision that links macOS targets.
+    description: Install zig and cargo-zigbuild for cross compilation.
     default: "false"
 runs:
   using: composite
@@ -32,13 +32,9 @@ runs:
     - uses: mlugg/setup-zig@v2
       if: inputs.zig == 'true'
       with:
-        version: 0.16.0
+        version: 0.17.0
     - name: cargo-zigbuild
       if: inputs.zig == 'true'
       shell: bash
-      # 0.23.4 splits Apple linker arguments under zig 0.16 (cargo-zigbuild#479); the fix is
-      # on master only (plan §6.2).
-      run: >-
-        cargo install cargo-zigbuild --locked
-        --git https://github.com/rust-cross/cargo-zigbuild
-        --rev d9f7fd32fbac13cc26d23847835f7f23a5ed3a25
+      # 0.24.0 includes the macOS linker argument fix for zig 0.16 (plan §6.2).
+      run: cargo install cargo-zigbuild --locked --version 0.24.0

@@ -11,7 +11,7 @@ publish = false
 bytes = { workspace = true }
 http = { workspace = true }
 kurpc-core = { workspace = true }
-rcgen = "0.13"
+rcgen = "0.14"
 rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "io-std", "io-util", "time", "sync"] }
 tokio-stream = { workspace = true, features = ["net"] }

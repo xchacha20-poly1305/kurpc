@@ -11,12 +11,12 @@ bytes = { workspace = true }
 # Only to name the RST_STREAM reason of an abandoned request stream; hyper already uses it.
 h2 = { workspace = true }
 http = { workspace = true }
-hyper = { workspace = true, default-features = false }
+hyper = { workspace = true }
 hyper-util = { workspace = true, features = ["tokio"] }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "io-util", "time", "sync"] }
 tonic = { workspace = true, features = ["channel"] }
 # Only for the `Stream` trait of request bodies; tonic already depends on it.
-tokio-stream = { workspace = true, default-features = false }
+tokio-stream = { workspace = true }
 tower = { workspace = true }
 
 [target.'cfg(unix)'.dependencies]
