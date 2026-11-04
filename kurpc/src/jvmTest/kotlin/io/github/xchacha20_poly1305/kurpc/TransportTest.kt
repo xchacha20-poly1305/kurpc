@@ -1,11 +1,25 @@
 package io.github.xchacha20_poly1305.kurpc
 
+import java.io.File
 import java.util.UUID
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 public class TransportTest {
+    @Test
+    public fun missingUnixSocketReachesTheConnector() = test {
+        val path = File(System.getProperty("java.io.tmpdir"), "kurpc-${UUID.randomUUID()}.sock").path
+        // On Windows this used to throw IllegalArgumentException in JNI before dialing.
+        Channel(ChannelConfig(Transport.Unix(path))).use { channel ->
+            assertFailsWith<TransportException> {
+                channel.unary(ECHO, byteArrayOf(), CallOptions(waitForReady = false))
+            }
+        }
+        awaitIdleHandles()
+    }
+
     @Test
     public fun tcpRoundTrip() = test {
         TestServer.tcp().use { server ->

@@ -82,7 +82,6 @@ pub(crate) fn metadata_to_java<'local>(
 
 /// Values of `NativeChannelConfig.transport`.
 const TRANSPORT_TCP: i32 = 0;
-#[cfg(unix)]
 const TRANSPORT_UNIX: i32 = 1;
 #[cfg(windows)]
 const TRANSPORT_WINDOWS_NAMED_PIPE: i32 = 2;
@@ -121,7 +120,6 @@ pub(crate) fn channel_config(
                 port,
             }
         }
-        #[cfg(unix)]
         TRANSPORT_UNIX => TransportConfig::Unix { path: address },
         #[cfg(windows)]
         TRANSPORT_WINDOWS_NAMED_PIPE => TransportConfig::WindowsNamedPipe { name: address },

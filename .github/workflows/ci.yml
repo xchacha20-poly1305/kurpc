@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Real Unix sockets on macOS, named pipes on Windows.
+        # Real Unix sockets on macOS and Windows, plus Windows named pipes.
         os: [macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -78,3 +78,28 @@ jobs:
           api-level: ${{ matrix.api }}
           arch: ${{ matrix.arch }}
           script: ./gradlew -Pkurpc.targets=android-${{ matrix.arch }} :kurpc:connectedAndroidDeviceTest
+
+  snapshot:
+    needs: [check, cross, platform-test, android]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+        with:
+          zig: "true"
+          ndk: "true"
+      - name: Publish snapshot
+        run: |
+          version=$(sed -n 's/^version=//p' gradle.properties)
+          if [[ "$version" != *-SNAPSHOT ]]; then
+            echo "Skipping snapshot publication for $version"
+            exit 0
+          fi
+          ./gradlew -Pkurpc.targets=all publishToMavenCentral
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: "F22FA56A"

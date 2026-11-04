@@ -69,13 +69,12 @@ public class LifecycleTest {
 
     @Test
     public fun rejectedArguments() = test {
-        // Each platform rejects the other family's local transport before reaching native code.
-        val foreign = if (hostOs == HostOs.WINDOWS) {
-            Transport.Unix("/tmp/kurpc.sock")
-        } else {
-            Transport.WindowsNamedPipe("\\\\.\\pipe\\kurpc")
+        // UDS is supported on every host; named pipes remain Windows-only.
+        if (hostOs != HostOs.WINDOWS) {
+            assertFailsWith<IllegalArgumentException> {
+                Channel(ChannelConfig(Transport.WindowsNamedPipe("""\\.\pipe\kurpc""")))
+            }
         }
-        assertFailsWith<IllegalArgumentException> { Channel(ChannelConfig(foreign)) }
         assertFailsWith<IllegalArgumentException> {
             Channel(ChannelConfig(Transport.Tcp("127.0.0.1", 99999)))
         }

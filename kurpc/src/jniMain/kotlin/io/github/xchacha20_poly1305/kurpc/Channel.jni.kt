@@ -297,9 +297,6 @@ private fun toNative(config: ChannelConfig): NativeChannelConfig {
             port = transport.port
         }
         is Transport.Unix -> {
-            if (isWindows()) {
-                throw IllegalArgumentException("Unix sockets are not supported on this platform")
-            }
             kind = TRANSPORT_UNIX
             address = transport.path
             port = 0

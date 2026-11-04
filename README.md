@@ -322,7 +322,8 @@ try {
 ### Transports
 
 ```kotlin
-// Unix domain socket. A path starting with "\u0000" is a Linux / Android abstract socket.
+// Unix domain socket, also supported on Windows 10 1803+.
+// A path starting with "\u0000" is a Linux / Android abstract socket.
 Transport.Unix("/run/app/grpc.sock")
 
 // Windows named pipe.

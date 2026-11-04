@@ -21,7 +21,7 @@ public data class ChannelConfig(
 public sealed interface Transport {
     public data class Tcp(public val host: String, public val port: Int) : Transport
 
-    /** A path starting with `"\u0000"` is a Linux/Android abstract-namespace socket. */
+    /** UDS on Unix and Windows 10 1803+. A path starting with `"\u0000"` is a Linux/Android abstract socket. */
     public data class Unix(public val path: String) : Transport
 
     /** Full pipe path, for example `\\.\pipe\kurpc`. */

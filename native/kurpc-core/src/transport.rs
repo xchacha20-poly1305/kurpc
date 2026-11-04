@@ -25,7 +25,6 @@ pub enum TransportConfig {
     },
     /// On Linux and Android a path starting with `'\0'` names an abstract socket
     /// (handled by tokio).
-    #[cfg(unix)]
     Unix {
         path: String,
     },
@@ -47,7 +46,6 @@ impl fmt::Debug for TransportConfig {
                 .field("host", host)
                 .field("port", port)
                 .finish(),
-            #[cfg(unix)]
             TransportConfig::Unix { path } => f.debug_struct("Unix").field("path", path).finish(),
             #[cfg(windows)]
             TransportConfig::WindowsNamedPipe { name } => f
@@ -90,6 +88,10 @@ impl TransportConfig {
             }
             #[cfg(unix)]
             TransportConfig::Unix { path } => Ok(Box::new(UnixStream::connect(path).await?)),
+            #[cfg(windows)]
+            TransportConfig::Unix { path } => {
+                Ok(Box::new(windows_uds::UnixStream::connect(path).await?))
+            }
             #[cfg(windows)]
             TransportConfig::WindowsNamedPipe { name } => connect_named_pipe(name).await,
             TransportConfig::Custom(dialer) => match dialer.dial().await? {
@@ -210,3 +212,7 @@ impl Service<Uri> for Connector {
         Box::pin(async move { transport.connect().await.map(TokioIo::new) })
     }
 }
+
+#[cfg(any(windows, test))]
+#[path = "windows_uds.rs"]
+mod windows_uds;
