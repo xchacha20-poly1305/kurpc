@@ -54,6 +54,7 @@ internal fun registerAndroidNatives(
             artifactFileName.set("libkurpc.so")
             outputDirectory.set(project.layout.buildDirectory.dir("jniLibs/main/${abi.abi}"))
             outputPath.set("${abi.abi}/libkurpc.so")
+            usePrebuiltNative(project, "jniLibs/main/${abi.abi}/${abi.abi}/libkurpc.so")
         }
     }
     val testServers = abis.map { abi ->

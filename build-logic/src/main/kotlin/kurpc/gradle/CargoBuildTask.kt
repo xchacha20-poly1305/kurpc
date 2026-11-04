@@ -1,17 +1,21 @@
 package kurpc.gradle
 
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import javax.inject.Inject
 import org.gradle.api.DefaultTask
+import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFile
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
@@ -27,6 +31,9 @@ import org.gradle.process.ExecOperations
  * Desktop cross builds pass [cargoSubcommand] `zigbuild` and [release] `true`. Android builds
  * pass `build` and put the NDK linker in [extraEnvironment]. An empty [targetTriple] is the
  * host target (`target/<profile>/` rather than `target/<triple>/<profile>/`).
+ *
+ * When [prebuiltSource] is set (`-Pkurpc.prebuiltNatives=<dir>`), cargo is not invoked and the
+ * file is copied to [outputFile] instead. Publish jobs use this to reuse a prior cross build.
  */
 abstract class CargoBuildTask : DefaultTask() {
     @get:Inject
@@ -80,12 +87,26 @@ abstract class CargoBuildTask : DefaultTask() {
     @get:Input
     abstract val outputPath: Property<String>
 
+    /**
+     * Prebuilt library copied to [outputFile] in place of a cargo build. Absent unless
+     * `-Pkurpc.prebuiltNatives` is set.
+     */
+    @get:InputFile
+    @get:Optional
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val prebuiltSource: RegularFileProperty
+
     @get:Internal
     val outputFile: Provider<RegularFile>
         get() = outputDirectory.file(outputPath)
 
     @TaskAction
     fun build() {
+        if (prebuiltSource.isPresent) {
+            copyArtifact(prebuiltSource.get().asFile.toPath())
+            return
+        }
+
         val triple = targetTriple.orNull?.takeIf { it.isNotEmpty() }
         val profile = if (release.get()) "release" else "debug"
         val command = mutableListOf(executable.get(), cargoSubcommand.get())
@@ -112,13 +133,29 @@ abstract class CargoBuildTask : DefaultTask() {
             .let { root -> if (targetDirectory != null) root.resolve(targetDirectory) else root }
             .resolve(profile)
             .resolve(artifactFileName.get())
+        copyArtifact(artifact)
+    }
+
+    private fun copyArtifact(source: Path) {
         val destination = outputFile.get().asFile.toPath()
         Files.createDirectories(destination.parent)
         Files.copy(
-            artifact,
+            source,
             destination,
             StandardCopyOption.REPLACE_EXISTING,
             StandardCopyOption.COPY_ATTRIBUTES,
         )
     }
+}
+
+/**
+ * `-Pkurpc.prebuiltNatives=<dir>` points at a tree that mirrors `:kurpc`'s `build/`
+ * (`natives-release/`, `jniLibs/main/`). Relative paths resolve from the root project.
+ */
+internal fun CargoBuildTask.usePrebuiltNative(project: Project, relativePath: String) {
+    prebuiltSource.fileProvider(
+        project.providers.gradleProperty("kurpc.prebuiltNatives").map { path ->
+            project.rootProject.file("$path/$relativePath")
+        },
+    )
 }

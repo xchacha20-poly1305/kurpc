@@ -90,6 +90,10 @@ internal fun registerDesktopNatives(
             artifactFileName.set(target.libraryFileName)
             outputDirectory.set(project.layout.buildDirectory.dir("natives-release/${target.classifier}"))
             outputPath.set("$NATIVES_RESOURCE_DIR/${target.classifier}/${target.libraryFileName}")
+            usePrebuiltNative(
+                project,
+                "natives-release/${target.classifier}/$NATIVES_RESOURCE_DIR/${target.classifier}/${target.libraryFileName}",
+            )
         }
         project.tasks.register<Jar>("nativesJar${target.taskSuffix}") {
             group = "build"

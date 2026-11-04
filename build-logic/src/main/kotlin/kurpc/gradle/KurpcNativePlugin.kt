@@ -35,7 +35,8 @@ const val NATIVES_RESOURCE_DIR: String = "io/github/xchacha20_poly1305/kurpc/nat
  *   servers into the device-test APK.
  * - Desktop ([registerDesktopNatives]): release zigbuild libraries as `kurpc-natives-jvm` jars,
  *   published by [registerNativesPublication]. `-Pkurpc.targets` ([TargetSelection]) limits both
- *   matrices.
+ *   matrices. `-Pkurpc.prebuiltNatives=<dir>` copies those libraries (and the Android ones)
+ *   from a prior `build/` tree instead of running cargo.
  */
 class KurpcNativePlugin : Plugin<Project> {
     override fun apply(project: Project) {

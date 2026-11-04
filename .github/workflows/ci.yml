@@ -32,12 +32,12 @@ jobs:
           zig: "true"
           ndk: "true"
       - run: ./gradlew -Pkurpc.targets=all :kurpc:nativesJars :kurpc:assemble
+      - run: tar -C kurpc/build -czf natives.tar.gz natives-release jniLibs/main
       - uses: actions/upload-artifact@v7
         with:
           name: natives
-          path: |
-            kurpc/build/libs/kurpc-natives-jvm-*.jar
-            kurpc/build/outputs/aar/*.aar
+          if-no-files-found: error
+          path: natives.tar.gz
 
   platform-test:
     strategy:
@@ -86,9 +86,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v7
         with:
-          zig: "true"
-          ndk: "true"
+          name: natives
       - name: Publish snapshot
         run: |
           version=$(sed -n 's/^version=//p' gradle.properties)
@@ -96,7 +96,11 @@ jobs:
             echo "Skipping snapshot publication for $version"
             exit 0
           fi
-          ./gradlew -Pkurpc.targets=all publishToMavenCentral
+          mkdir -p prebuilt-natives
+          tar -xzf natives.tar.gz -C prebuilt-natives
+          ./gradlew -Pkurpc.targets=all \
+            -Pkurpc.prebuiltNatives="$GITHUB_WORKSPACE/prebuilt-natives" \
+            publishToMavenCentral
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

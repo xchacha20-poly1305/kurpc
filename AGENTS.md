@@ -26,7 +26,8 @@ Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library over JN
   `connectedAndroidDeviceTest` needs a device or emulator.
 - `make check` runs what CI's check job runs; `make native_all` builds every natives jar and the AAR.
 - Cross builds go through Gradle: `-Pkurpc.targets=host|all|<list>`, `-Pkurpc.zigbuild=<path>`
-  (plan §6.3). Public Kotlin API changes need `./gradlew :kurpc:updateKotlinAbi`.
+  (plan §6.3). `-Pkurpc.prebuiltNatives=<dir>` reuses a `build/` tree of those natives (CI
+  publish). Public Kotlin API changes need `./gradlew :kurpc:updateKotlinAbi`.
 
 ## Rust conventions (follow the existing code)
 
