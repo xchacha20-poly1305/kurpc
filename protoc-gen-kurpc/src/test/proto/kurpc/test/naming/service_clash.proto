@@ -1,0 +1,5 @@
+syntax = "proto3";
+package kurpc.test.naming.case2;
+// Compiled by both protobuf-java and kurpc to check the actual Java naming rules.
+message Payload { string value = 1; }
+service ServiceClash { rpc Echo(Payload) returns (Payload); }

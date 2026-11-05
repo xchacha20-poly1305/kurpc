@@ -518,7 +518,7 @@ dependencies = [
 
 [[package]]
 name = "kurpc-core"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [
  "async-io",
  "bytes",
@@ -538,7 +538,7 @@ dependencies = [
 
 [[package]]
 name = "kurpc-jni"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [
  "base64 0.23.1",
  "bytes",
@@ -548,7 +548,7 @@ dependencies = [
 
 [[package]]
 name = "kurpc-testserver"
-version = "0.1.0"
+version = "0.2.1"
 dependencies = [
  "bytes",
  "http",

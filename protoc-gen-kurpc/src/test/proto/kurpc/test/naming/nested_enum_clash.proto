@@ -1,0 +1,5 @@
+syntax = "proto3";
+package kurpc.test.naming.case4;
+// Compiled by both protobuf-java and kurpc to check the actual Java naming rules.
+message Envelope { message Layer { enum NestedEnumClash { ZERO = 0; } string value = 1; } }
+service Naming4 { rpc Echo(Envelope.Layer) returns (Envelope.Layer); }

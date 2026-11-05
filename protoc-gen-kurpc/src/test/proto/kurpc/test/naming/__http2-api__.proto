@@ -1,0 +1,5 @@
+syntax = "proto3";
+package kurpc.test.naming.case5;
+// Compiled by both protobuf-java and kurpc to check the actual Java naming rules.
+message raw_message { message HTTPReply { string value = 1; } }
+service Naming5 { rpc Echo(raw_message.HTTPReply) returns (raw_message.HTTPReply); }

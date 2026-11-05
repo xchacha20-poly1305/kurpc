@@ -1,0 +1,5 @@
+syntax = "proto3";
+package kurpc.test.naming.empty;
+option java_package = "";
+message Bare { string value = 1; }
+service EmptyPackageNames { rpc Echo(Bare) returns (Bare); }
