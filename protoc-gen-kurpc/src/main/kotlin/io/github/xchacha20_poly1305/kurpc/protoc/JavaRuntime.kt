@@ -3,46 +3,45 @@ package io.github.xchacha20_poly1305.kurpc.protoc
 import com.google.protobuf.DescriptorProtos.DescriptorProto
 import com.google.protobuf.DescriptorProtos.FileDescriptorProto
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeVariableName
+
+private val MESSAGE_LITE = ClassName("com.google.protobuf", "MessageLite")
+private val PARSER = ClassName("com.google.protobuf", "Parser")
+
+private const val CODEC_FUNCTION = "protobufCodec"
 
 /**
- * The classes protobuf-java (full or lite, which name them alike) generates for the messages of
- * [files], looked up by full proto name (`.package.Outer.Inner`). Follows the proto2 / proto3
- * rules of protoc's `ClassNameResolver`; editions are not supported, as `generate` does not
- * declare them to protoc.
+ * The classes protobuf-java (full or lite, which name them alike) generates, encoded through
+ * their `parser()`. Follows the proto2 / proto3 rules of protoc's `ClassNameResolver`; editions
+ * are not supported, as `generate` does not declare them to protoc.
  */
-internal class JavaTypes(files: List<FileDescriptorProto>) {
-    private val classes = HashMap<String, ClassName>()
-
-    init {
-        for (file in files) {
-            val protoPrefix = if (file.`package`.isEmpty()) "." else ".${file.`package`}."
-            val enclosingNames = if (file.options.javaMultipleFiles) {
-                emptyList()
-            } else {
-                listOf(outerClassName(file))
-            }
-            for (message in file.messageTypeList) {
-                register(message, protoPrefix, javaPackage(file), enclosingNames)
-            }
-        }
+internal class JavaRuntime(files: List<FileDescriptorProto>) : MessageRuntime {
+    private val classes: Map<String, ClassName> = messageClasses(files, ::kotlinPackage) { file ->
+        if (file.options.javaMultipleFiles) emptyList() else listOf(outerClassName(file))
     }
 
-    private fun register(
-        message: DescriptorProto,
-        protoPrefix: String,
-        javaPackage: String,
-        enclosingNames: List<String>,
-    ) {
-        val protoName = protoPrefix + message.name
-        val names = enclosingNames + message.name
-        classes[protoName] = ClassName(javaPackage, names)
-        for (nested in message.nestedTypeList) {
-            register(nested, "$protoName.", javaPackage, names)
-        }
-    }
+    override fun kotlinPackage(file: FileDescriptorProto): String = javaPackage(file)
 
-    fun message(protoName: String): ClassName =
+    override fun type(protoName: String): ClassName =
         classes[protoName] ?: throw GeneratorException("unknown message type $protoName")
+
+    override fun codec(protoName: String): CodeBlock =
+        CodeBlock.of("%N(%T.parser())", CODEC_FUNCTION, type(protoName))
+
+    override fun codecFunction(): FunSpec {
+        val message = TypeVariableName("T", MESSAGE_LITE)
+        return codecFunction(
+            CODEC_FUNCTION,
+            message,
+            ParameterSpec("parser", PARSER.parameterizedBy(message)),
+            encode = "return message.toByteArray()",
+            decode = "return parser.parseFrom(bytes)",
+        )
+    }
 }
 
 internal fun javaPackage(file: FileDescriptorProto): String =

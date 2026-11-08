@@ -69,7 +69,7 @@ public class RelayTest {
                 assertEquals("one", channel.unary(ECHO, "one".encodeToByteArray()).decodeToString())
             }
             TestServer.tcp(address.port).use {
-                val options = CallOptions(timeout = 10.seconds, waitForReady = true)
+                val options = NativeCallOptions(timeout = 10.seconds, waitForReady = true)
                 assertEquals("two", channel.unary(ECHO, "two".encodeToByteArray(), options).decodeToString())
             }
             assertTrue(connects.get() >= 2, "connector ran ${connects.get()} times")
@@ -82,7 +82,7 @@ public class RelayTest {
         val transport = Transport.Custom(Connector { throw IOException("no route to the daemon") })
         Channel(ChannelConfig(transport)).use { channel ->
             val error = assertFailsWith<TransportException> {
-                channel.unary(ECHO, ByteArray(0), CallOptions(waitForReady = false))
+                channel.unary(ECHO, ByteArray(0), NativeCallOptions(waitForReady = false))
             }
             assertTrue(error.message!!.contains("no route to the daemon"), error.message)
         }
@@ -107,7 +107,7 @@ public class RelayTest {
         )
         Channel(ChannelConfig(transport)).use { channel ->
             assertFailsWith<TransportException> {
-                channel.unary(ECHO, ByteArray(0), CallOptions(waitForReady = false))
+                channel.unary(ECHO, ByteArray(0), NativeCallOptions(waitForReady = false))
             }
             closed.await()
         }

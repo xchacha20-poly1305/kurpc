@@ -12,5 +12,3 @@ public object Kurpc {
         configureWorkerThreads(workerThreads)
     }
 }
-
-internal expect fun configureWorkerThreads(workerThreads: Int)

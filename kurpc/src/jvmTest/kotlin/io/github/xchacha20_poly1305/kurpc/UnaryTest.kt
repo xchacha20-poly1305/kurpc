@@ -10,7 +10,6 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 public class UnaryTest {
     @Test
@@ -77,7 +76,7 @@ public class UnaryTest {
                 channel.unary(
                     ECHO,
                     ByteArray(0),
-                    CallOptions(timeout = 2.seconds, waitForReady = false),
+                    NativeCallOptions(timeout = 2.seconds, waitForReady = false),
                 )
             }
         } finally {
@@ -137,7 +136,7 @@ public class UnaryTest {
                 channel.unary(
                     ECHO,
                     "ready".encodeToByteArray(),
-                    CallOptions(timeout = 15.seconds, waitForReady = true),
+                    NativeCallOptions(timeout = 15.seconds, waitForReady = true),
                 )
             }
             delay(300.milliseconds)

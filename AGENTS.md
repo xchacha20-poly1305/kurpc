@@ -1,6 +1,7 @@
 # kurpc
 
-Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library over JNI.
+Kotlin Multiplatform gRPC client: a Rust (tonic) native library over JNI on JVM and Android,
+gRPC-Web and `grpc-websockets` in browsers (JS and Wasm).
 
 ## Layout
 
@@ -9,18 +10,24 @@ Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library over JN
 - `native/kurpc-testserver`: tonic server with the same passthrough codec; library + binary.
 - `kurpc/`: KMP module. `commonMain` → `jniMain` → `jvmMain` / `androidMain`; tests in `jvmTest`
   (testserver subprocess) and `androidDeviceTest` (testserver packaged in the test APK).
+  `commonMain` → `webMain` → `jsMain` / `wasmJsMain` is the browser channel; `webTest` runs on
+  Node for both targets against fake `fetch` / `WebSocket`.
+- `web-bridge/`: the JavaScript both browser targets embed (see its README); `node --test` tests.
 - `build-logic/`: convention plugin `kurpc.native` with `CargoBuildTask` (host and Android natives).
-- `protoc-gen-kurpc/`: protoc plugin (Kotlin/JVM, KotlinPoet) generating clients for protobuf-java
-  messages on `CallInvoker` / `MethodDescriptor` from `commonMain`. Published as a plain jar plus
-  the runnable `all` jar. Its tests compile `src/test/proto` with the plugin itself and call
-  `kurpc-testserver` through the generated clients, using `:kurpc`'s host cargo outputs.
+- `protoc-gen-kurpc/`: protoc plugin (Kotlin/JVM, KotlinPoet) generating clients on `CallInvoker` /
+  `MethodDescriptor` from `commonMain`, for the messages of a `MessageRuntime`: protobuf-java
+  (`JavaRuntime`, the default) or Wire (`runtime=wire`, `WireRuntime`). The `wireTest` suite
+  compiles `src/wireTest/proto` with Wire's own compiler and with the plugin. Published as a
+  plain jar plus the runnable `all` jar. Its tests compile `src/test/proto` with the plugin itself
+  and call `kurpc-testserver` through the generated clients, using `:kurpc`'s host cargo outputs.
 
 ## Commands
 
 - `cargo test --workspace`
 - `cargo clippy --workspace --all-targets -- -D warnings`
 - `cargo fmt --check`
-- `./gradlew :kurpc:check`: jvmTest on JDK 21 and JDK 8, Android Lint (`NewApi`).
+- `./gradlew :kurpc:check`: jvmTest on JDK 21 and JDK 8, Android Lint (`NewApi`), `testWebBridge`,
+  `jsNodeTest` and `wasmJsNodeTest`.
 - `./gradlew :protoc-gen-kurpc:check`: generator unit tests and generated clients end to end.
 - `./gradlew :kurpc:assemble :kurpc:assembleAndroidTest`: AAR with four ABIs, device-test APK;
   `connectedAndroidDeviceTest` needs a device or emulator.

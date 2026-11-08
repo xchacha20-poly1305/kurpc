@@ -120,9 +120,9 @@ class NamesTest {
             setOptions(FileOptions.newBuilder().setJavaOuterClassname("custom_API2"))
             addMessageType(message("Health"))
         }
-        val types = JavaTypes(listOf(descriptor))
+        val types = JavaRuntime(listOf(descriptor))
         assertEquals("custom_API2", outerClassName(descriptor))
-        assertEquals(ClassName("", "custom_API2", "Health"), types.message(".Health"))
+        assertEquals(ClassName("", "custom_API2", "Health"), types.type(".Health"))
     }
 
     @Test
@@ -135,7 +135,7 @@ class NamesTest {
         assertEquals("", javaPackage(descriptor))
         assertEquals(
             ClassName("", "Health", "Request"),
-            JavaTypes(listOf(descriptor)).message(".proto.pkg.Request"),
+            JavaRuntime(listOf(descriptor)).type(".proto.pkg.Request"),
         )
     }
 
@@ -155,7 +155,7 @@ class NamesTest {
                 })
             }
         }
-        val types = JavaTypes(files)
+        val types = JavaRuntime(files)
         for (multiple in listOf(false, true)) {
             val suffix = if (multiple) "multiple" else "single"
             val enclosing = if (multiple) emptyList() else listOf("ApiContainer")
@@ -164,7 +164,7 @@ class NamesTest {
                 val nestedNames = names.take(depth)
                 assertEquals(
                     ClassName("java.$suffix", enclosing + nestedNames),
-                    types.message(".proto.$suffix.${nestedNames.joinToString(".")}"),
+                    types.type(".proto.$suffix.${nestedNames.joinToString(".")}"),
                 )
             }
         }
@@ -178,7 +178,7 @@ class NamesTest {
         }
         assertEquals(
             ClassName("pkg", "HealthOuterClass", "Health", "Request"),
-            JavaTypes(listOf(descriptor)).message(".pkg.Health.Request"),
+            JavaRuntime(listOf(descriptor)).type(".pkg.Health.Request"),
         )
     }
 
@@ -194,10 +194,10 @@ class NamesTest {
             addMessageType(message("Outer") { addNestedType(message("Inner")) })
         }
         val noPackage = file("c.proto") { addMessageType(message("Bare")) }
-        val types = JavaTypes(listOf(nested, multiple, noPackage))
-        assertEquals(ClassName("pkg", "A", "Outer", "Inner"), types.message(".pkg.Outer.Inner"))
-        assertEquals(ClassName("com.example", "Outer", "Inner"), types.message(".pkg.b.Outer.Inner"))
-        assertEquals(ClassName("", "C", "Bare"), types.message(".Bare"))
+        val types = JavaRuntime(listOf(nested, multiple, noPackage))
+        assertEquals(ClassName("pkg", "A", "Outer", "Inner"), types.type(".pkg.Outer.Inner"))
+        assertEquals(ClassName("com.example", "Outer", "Inner"), types.type(".pkg.b.Outer.Inner"))
+        assertEquals(ClassName("", "C", "Bare"), types.type(".Bare"))
     }
 }
 

@@ -1,0 +1,223 @@
+// Klib ABI Dump
+// Targets: [js, wasmJs]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <io.github.xchacha20-poly1305:kurpc>
+final enum class io.github.xchacha20_poly1305.kurpc/WebStreamTransport : kotlin/Enum<io.github.xchacha20_poly1305.kurpc/WebStreamTransport> { // io.github.xchacha20_poly1305.kurpc/WebStreamTransport|null[0]
+    enum entry Fetch // io.github.xchacha20_poly1305.kurpc/WebStreamTransport.Fetch|null[0]
+    enum entry WebSocket // io.github.xchacha20_poly1305.kurpc/WebStreamTransport.WebSocket|null[0]
+
+    final val entries // io.github.xchacha20_poly1305.kurpc/WebStreamTransport.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.xchacha20_poly1305.kurpc/WebStreamTransport> // io.github.xchacha20_poly1305.kurpc/WebStreamTransport.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): io.github.xchacha20_poly1305.kurpc/WebStreamTransport // io.github.xchacha20_poly1305.kurpc/WebStreamTransport.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<io.github.xchacha20_poly1305.kurpc/WebStreamTransport> // io.github.xchacha20_poly1305.kurpc/WebStreamTransport.values|values#static(){}[0]
+}
+
+abstract interface <#A: kotlin/Any?> io.github.xchacha20_poly1305.kurpc/MessageCodec { // io.github.xchacha20_poly1305.kurpc/MessageCodec|null[0]
+    abstract fun decode(kotlin/ByteArray): #A // io.github.xchacha20_poly1305.kurpc/MessageCodec.decode|decode(kotlin.ByteArray){}[0]
+    abstract fun encode(#A): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/MessageCodec.encode|encode(1:0){}[0]
+}
+
+abstract interface io.github.xchacha20_poly1305.kurpc/CallInvoker { // io.github.xchacha20_poly1305.kurpc/CallInvoker|null[0]
+    abstract fun bidiStreaming(kotlin/String, kotlinx.coroutines.flow/Flow<kotlin/ByteArray>, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): kotlinx.coroutines.flow/Flow<kotlin/ByteArray> // io.github.xchacha20_poly1305.kurpc/CallInvoker.bidiStreaming|bidiStreaming(kotlin.String;kotlinx.coroutines.flow.Flow<kotlin.ByteArray>;io.github.xchacha20_poly1305.kurpc.CallOptions){}[0]
+    abstract fun serverStreaming(kotlin/String, kotlin/ByteArray, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): kotlinx.coroutines.flow/Flow<kotlin/ByteArray> // io.github.xchacha20_poly1305.kurpc/CallInvoker.serverStreaming|serverStreaming(kotlin.String;kotlin.ByteArray;io.github.xchacha20_poly1305.kurpc.CallOptions){}[0]
+    abstract suspend fun clientStreaming(kotlin/String, kotlinx.coroutines.flow/Flow<kotlin/ByteArray>, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/CallInvoker.clientStreaming|clientStreaming(kotlin.String;kotlinx.coroutines.flow.Flow<kotlin.ByteArray>;io.github.xchacha20_poly1305.kurpc.CallOptions){}[0]
+    abstract suspend fun unary(kotlin/String, kotlin/ByteArray, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/CallInvoker.unary|unary(kotlin.String;kotlin.ByteArray;io.github.xchacha20_poly1305.kurpc.CallOptions){}[0]
+    abstract suspend fun unaryCall(kotlin/String, kotlin/ByteArray, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): io.github.xchacha20_poly1305.kurpc/UnaryResponse // io.github.xchacha20_poly1305.kurpc/CallInvoker.unaryCall|unaryCall(kotlin.String;kotlin.ByteArray;io.github.xchacha20_poly1305.kurpc.CallOptions){}[0]
+}
+
+abstract interface io.github.xchacha20_poly1305.kurpc/Channel : io.github.xchacha20_poly1305.kurpc/CallInvoker, kotlin/AutoCloseable { // io.github.xchacha20_poly1305.kurpc/Channel|null[0]
+    abstract fun close() // io.github.xchacha20_poly1305.kurpc/Channel.close|close(){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: kotlin/Any?> io.github.xchacha20_poly1305.kurpc/MethodDescriptor { // io.github.xchacha20_poly1305.kurpc/MethodDescriptor|null[0]
+    constructor <init>(kotlin/String, io.github.xchacha20_poly1305.kurpc/MessageCodec<#A>, io.github.xchacha20_poly1305.kurpc/MessageCodec<#B>) // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.<init>|<init>(kotlin.String;io.github.xchacha20_poly1305.kurpc.MessageCodec<1:0>;io.github.xchacha20_poly1305.kurpc.MessageCodec<1:1>){}[0]
+
+    final val path // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.path|{}path[0]
+        final fun <get-path>(): kotlin/String // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.path.<get-path>|<get-path>(){}[0]
+    final val requestCodec // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.requestCodec|{}requestCodec[0]
+        final fun <get-requestCodec>(): io.github.xchacha20_poly1305.kurpc/MessageCodec<#A> // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.requestCodec.<get-requestCodec>|<get-requestCodec>(){}[0]
+    final val responseCodec // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.responseCodec|{}responseCodec[0]
+        final fun <get-responseCodec>(): io.github.xchacha20_poly1305.kurpc/MessageCodec<#B> // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.responseCodec.<get-responseCodec>|<get-responseCodec>(){}[0]
+
+    final fun toString(): kotlin/String // io.github.xchacha20_poly1305.kurpc/MethodDescriptor.toString|toString(){}[0]
+}
+
+final class io.github.xchacha20_poly1305.kurpc/ChannelClosedException : kotlin/RuntimeException { // io.github.xchacha20_poly1305.kurpc/ChannelClosedException|null[0]
+    constructor <init>(kotlin/String = ...) // io.github.xchacha20_poly1305.kurpc/ChannelClosedException.<init>|<init>(kotlin.String){}[0]
+}
+
+final class io.github.xchacha20_poly1305.kurpc/Metadata { // io.github.xchacha20_poly1305.kurpc/Metadata|null[0]
+    final val entries // io.github.xchacha20_poly1305.kurpc/Metadata.entries|{}entries[0]
+        final fun <get-entries>(): kotlin.collections/List<kotlin/Pair<kotlin/String, io.github.xchacha20_poly1305.kurpc/Metadata.Value>> // io.github.xchacha20_poly1305.kurpc/Metadata.entries.<get-entries>|<get-entries>(){}[0]
+
+    final fun binary(kotlin/String): kotlin/ByteArray? // io.github.xchacha20_poly1305.kurpc/Metadata.binary|binary(kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.xchacha20_poly1305.kurpc/Metadata.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/Metadata.hashCode|hashCode(){}[0]
+    final fun isEmpty(): kotlin/Boolean // io.github.xchacha20_poly1305.kurpc/Metadata.isEmpty|isEmpty(){}[0]
+    final fun plus(io.github.xchacha20_poly1305.kurpc/Metadata): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/Metadata.plus|plus(io.github.xchacha20_poly1305.kurpc.Metadata){}[0]
+    final fun text(kotlin/String): kotlin/String? // io.github.xchacha20_poly1305.kurpc/Metadata.text|text(kotlin.String){}[0]
+    final fun toString(): kotlin/String // io.github.xchacha20_poly1305.kurpc/Metadata.toString|toString(){}[0]
+
+    sealed class Value { // io.github.xchacha20_poly1305.kurpc/Metadata.Value|null[0]
+        final class Binary : io.github.xchacha20_poly1305.kurpc/Metadata.Value { // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary|null[0]
+            constructor <init>(kotlin/ByteArray) // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary.<init>|<init>(kotlin.ByteArray){}[0]
+
+            final val bytes // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary.bytes|{}bytes[0]
+                final fun <get-bytes>(): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary.bytes.<get-bytes>|<get-bytes>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Binary.toString|toString(){}[0]
+        }
+
+        final class Text : io.github.xchacha20_poly1305.kurpc/Metadata.Value { // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text|null[0]
+            constructor <init>(kotlin/String) // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text.<init>|<init>(kotlin.String){}[0]
+
+            final val text // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text.text|{}text[0]
+                final fun <get-text>(): kotlin/String // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text.text.<get-text>|<get-text>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // io.github.xchacha20_poly1305.kurpc/Metadata.Value.Text.toString|toString(){}[0]
+        }
+    }
+
+    final object Companion { // io.github.xchacha20_poly1305.kurpc/Metadata.Companion|null[0]
+        final val Empty // io.github.xchacha20_poly1305.kurpc/Metadata.Companion.Empty|{}Empty[0]
+            final fun <get-Empty>(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/Metadata.Companion.Empty.<get-Empty>|<get-Empty>(){}[0]
+
+        final fun of(kotlin/Array<out kotlin/Pair<kotlin/String, kotlin/String>>...): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/Metadata.Companion.of|of(kotlin.Array<out|kotlin.Pair<kotlin.String,kotlin.String>>...){}[0]
+        final fun ofBinary(kotlin/Array<out kotlin/Pair<kotlin/String, kotlin/ByteArray>>...): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/Metadata.Companion.ofBinary|ofBinary(kotlin.Array<out|kotlin.Pair<kotlin.String,kotlin.ByteArray>>...){}[0]
+    }
+}
+
+final class io.github.xchacha20_poly1305.kurpc/StatusException : kotlin/RuntimeException { // io.github.xchacha20_poly1305.kurpc/StatusException|null[0]
+    constructor <init>(io.github.xchacha20_poly1305.kurpc/Status.Code, kotlin/String, kotlin/ByteArray, io.github.xchacha20_poly1305.kurpc/Metadata, kotlin/Throwable? = ...) // io.github.xchacha20_poly1305.kurpc/StatusException.<init>|<init>(io.github.xchacha20_poly1305.kurpc.Status.Code;kotlin.String;kotlin.ByteArray;io.github.xchacha20_poly1305.kurpc.Metadata;kotlin.Throwable?){}[0]
+
+    final val code // io.github.xchacha20_poly1305.kurpc/StatusException.code|{}code[0]
+        final fun <get-code>(): io.github.xchacha20_poly1305.kurpc/Status.Code // io.github.xchacha20_poly1305.kurpc/StatusException.code.<get-code>|<get-code>(){}[0]
+    final val description // io.github.xchacha20_poly1305.kurpc/StatusException.description|{}description[0]
+        final fun <get-description>(): kotlin/String // io.github.xchacha20_poly1305.kurpc/StatusException.description.<get-description>|<get-description>(){}[0]
+    final val details // io.github.xchacha20_poly1305.kurpc/StatusException.details|{}details[0]
+        final fun <get-details>(): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/StatusException.details.<get-details>|<get-details>(){}[0]
+    final val trailers // io.github.xchacha20_poly1305.kurpc/StatusException.trailers|{}trailers[0]
+        final fun <get-trailers>(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/StatusException.trailers.<get-trailers>|<get-trailers>(){}[0]
+}
+
+final class io.github.xchacha20_poly1305.kurpc/TransportException : kotlin/RuntimeException { // io.github.xchacha20_poly1305.kurpc/TransportException|null[0]
+    constructor <init>(kotlin/String) // io.github.xchacha20_poly1305.kurpc/TransportException.<init>|<init>(kotlin.String){}[0]
+}
+
+final class io.github.xchacha20_poly1305.kurpc/UnaryResponse { // io.github.xchacha20_poly1305.kurpc/UnaryResponse|null[0]
+    constructor <init>(kotlin/ByteArray, io.github.xchacha20_poly1305.kurpc/Metadata, io.github.xchacha20_poly1305.kurpc/Metadata) // io.github.xchacha20_poly1305.kurpc/UnaryResponse.<init>|<init>(kotlin.ByteArray;io.github.xchacha20_poly1305.kurpc.Metadata;io.github.xchacha20_poly1305.kurpc.Metadata){}[0]
+
+    final val headers // io.github.xchacha20_poly1305.kurpc/UnaryResponse.headers|{}headers[0]
+        final fun <get-headers>(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/UnaryResponse.headers.<get-headers>|<get-headers>(){}[0]
+    final val message // io.github.xchacha20_poly1305.kurpc/UnaryResponse.message|{}message[0]
+        final fun <get-message>(): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/UnaryResponse.message.<get-message>|<get-message>(){}[0]
+    final val trailers // io.github.xchacha20_poly1305.kurpc/UnaryResponse.trailers|{}trailers[0]
+        final fun <get-trailers>(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/UnaryResponse.trailers.<get-trailers>|<get-trailers>(){}[0]
+
+    final fun component1(): kotlin/ByteArray // io.github.xchacha20_poly1305.kurpc/UnaryResponse.component1|component1(){}[0]
+    final fun component2(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/UnaryResponse.component2|component2(){}[0]
+    final fun component3(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/UnaryResponse.component3|component3(){}[0]
+    final fun copy(kotlin/ByteArray = ..., io.github.xchacha20_poly1305.kurpc/Metadata = ..., io.github.xchacha20_poly1305.kurpc/Metadata = ...): io.github.xchacha20_poly1305.kurpc/UnaryResponse // io.github.xchacha20_poly1305.kurpc/UnaryResponse.copy|copy(kotlin.ByteArray;io.github.xchacha20_poly1305.kurpc.Metadata;io.github.xchacha20_poly1305.kurpc.Metadata){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.xchacha20_poly1305.kurpc/UnaryResponse.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/UnaryResponse.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.xchacha20_poly1305.kurpc/UnaryResponse.toString|toString(){}[0]
+}
+
+final class io.github.xchacha20_poly1305.kurpc/WebCallOptions : io.github.xchacha20_poly1305.kurpc/CallOptions { // io.github.xchacha20_poly1305.kurpc/WebCallOptions|null[0]
+    constructor <init>(kotlin.time/Duration? = ..., io.github.xchacha20_poly1305.kurpc/Metadata = ..., io.github.xchacha20_poly1305.kurpc/WebStreamTransport? = ...) // io.github.xchacha20_poly1305.kurpc/WebCallOptions.<init>|<init>(kotlin.time.Duration?;io.github.xchacha20_poly1305.kurpc.Metadata;io.github.xchacha20_poly1305.kurpc.WebStreamTransport?){}[0]
+
+    final val serverStreamingTransport // io.github.xchacha20_poly1305.kurpc/WebCallOptions.serverStreamingTransport|{}serverStreamingTransport[0]
+        final fun <get-serverStreamingTransport>(): io.github.xchacha20_poly1305.kurpc/WebStreamTransport? // io.github.xchacha20_poly1305.kurpc/WebCallOptions.serverStreamingTransport.<get-serverStreamingTransport>|<get-serverStreamingTransport>(){}[0]
+}
+
+final class io.github.xchacha20_poly1305.kurpc/WebChannelConfig { // io.github.xchacha20_poly1305.kurpc/WebChannelConfig|null[0]
+    constructor <init>(kotlin/String, kotlin/String? = ..., io.github.xchacha20_poly1305.kurpc/Metadata = ..., io.github.xchacha20_poly1305.kurpc/WebStreamTransport = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...) // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.<init>|<init>(kotlin.String;kotlin.String?;io.github.xchacha20_poly1305.kurpc.Metadata;io.github.xchacha20_poly1305.kurpc.WebStreamTransport;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val baseUrl // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.baseUrl|{}baseUrl[0]
+        final fun <get-baseUrl>(): kotlin/String // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.baseUrl.<get-baseUrl>|<get-baseUrl>(){}[0]
+    final val maxMessageBytes // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.maxMessageBytes|{}maxMessageBytes[0]
+        final fun <get-maxMessageBytes>(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.maxMessageBytes.<get-maxMessageBytes>|<get-maxMessageBytes>(){}[0]
+    final val maxQueuedBytes // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.maxQueuedBytes|{}maxQueuedBytes[0]
+        final fun <get-maxQueuedBytes>(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.maxQueuedBytes.<get-maxQueuedBytes>|<get-maxQueuedBytes>(){}[0]
+    final val maxQueuedMessages // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.maxQueuedMessages|{}maxQueuedMessages[0]
+        final fun <get-maxQueuedMessages>(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.maxQueuedMessages.<get-maxQueuedMessages>|<get-maxQueuedMessages>(){}[0]
+    final val metadata // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.metadata|{}metadata[0]
+        final fun <get-metadata>(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.metadata.<get-metadata>|<get-metadata>(){}[0]
+    final val sendBufferBytes // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.sendBufferBytes|{}sendBufferBytes[0]
+        final fun <get-sendBufferBytes>(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.sendBufferBytes.<get-sendBufferBytes>|<get-sendBufferBytes>(){}[0]
+    final val serverStreamingTransport // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.serverStreamingTransport|{}serverStreamingTransport[0]
+        final fun <get-serverStreamingTransport>(): io.github.xchacha20_poly1305.kurpc/WebStreamTransport // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.serverStreamingTransport.<get-serverStreamingTransport>|<get-serverStreamingTransport>(){}[0]
+    final val webSocketBaseUrl // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.webSocketBaseUrl|{}webSocketBaseUrl[0]
+        final fun <get-webSocketBaseUrl>(): kotlin/String? // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.webSocketBaseUrl.<get-webSocketBaseUrl>|<get-webSocketBaseUrl>(){}[0]
+
+    final fun component1(): kotlin/String // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component1|component1(){}[0]
+    final fun component2(): kotlin/String? // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component2|component2(){}[0]
+    final fun component3(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component3|component3(){}[0]
+    final fun component4(): io.github.xchacha20_poly1305.kurpc/WebStreamTransport // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component4|component4(){}[0]
+    final fun component5(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component5|component5(){}[0]
+    final fun component6(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component6|component6(){}[0]
+    final fun component7(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component7|component7(){}[0]
+    final fun component8(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.component8|component8(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String? = ..., io.github.xchacha20_poly1305.kurpc/Metadata = ..., io.github.xchacha20_poly1305.kurpc/WebStreamTransport = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): io.github.xchacha20_poly1305.kurpc/WebChannelConfig // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.copy|copy(kotlin.String;kotlin.String?;io.github.xchacha20_poly1305.kurpc.Metadata;io.github.xchacha20_poly1305.kurpc.WebStreamTransport;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.xchacha20_poly1305.kurpc/WebChannelConfig.toString|toString(){}[0]
+}
+
+open class io.github.xchacha20_poly1305.kurpc/CallOptions { // io.github.xchacha20_poly1305.kurpc/CallOptions|null[0]
+    constructor <init>(kotlin.time/Duration? = ..., io.github.xchacha20_poly1305.kurpc/Metadata = ...) // io.github.xchacha20_poly1305.kurpc/CallOptions.<init>|<init>(kotlin.time.Duration?;io.github.xchacha20_poly1305.kurpc.Metadata){}[0]
+
+    final val metadata // io.github.xchacha20_poly1305.kurpc/CallOptions.metadata|{}metadata[0]
+        final fun <get-metadata>(): io.github.xchacha20_poly1305.kurpc/Metadata // io.github.xchacha20_poly1305.kurpc/CallOptions.metadata.<get-metadata>|<get-metadata>(){}[0]
+    final val timeout // io.github.xchacha20_poly1305.kurpc/CallOptions.timeout|{}timeout[0]
+        final fun <get-timeout>(): kotlin.time/Duration? // io.github.xchacha20_poly1305.kurpc/CallOptions.timeout.<get-timeout>|<get-timeout>(){}[0]
+}
+
+final object io.github.xchacha20_poly1305.kurpc/Status { // io.github.xchacha20_poly1305.kurpc/Status|null[0]
+    final enum class Code : kotlin/Enum<io.github.xchacha20_poly1305.kurpc/Status.Code> { // io.github.xchacha20_poly1305.kurpc/Status.Code|null[0]
+        enum entry ABORTED // io.github.xchacha20_poly1305.kurpc/Status.Code.ABORTED|null[0]
+        enum entry ALREADY_EXISTS // io.github.xchacha20_poly1305.kurpc/Status.Code.ALREADY_EXISTS|null[0]
+        enum entry CANCELLED // io.github.xchacha20_poly1305.kurpc/Status.Code.CANCELLED|null[0]
+        enum entry DATA_LOSS // io.github.xchacha20_poly1305.kurpc/Status.Code.DATA_LOSS|null[0]
+        enum entry DEADLINE_EXCEEDED // io.github.xchacha20_poly1305.kurpc/Status.Code.DEADLINE_EXCEEDED|null[0]
+        enum entry FAILED_PRECONDITION // io.github.xchacha20_poly1305.kurpc/Status.Code.FAILED_PRECONDITION|null[0]
+        enum entry INTERNAL // io.github.xchacha20_poly1305.kurpc/Status.Code.INTERNAL|null[0]
+        enum entry INVALID_ARGUMENT // io.github.xchacha20_poly1305.kurpc/Status.Code.INVALID_ARGUMENT|null[0]
+        enum entry NOT_FOUND // io.github.xchacha20_poly1305.kurpc/Status.Code.NOT_FOUND|null[0]
+        enum entry OK // io.github.xchacha20_poly1305.kurpc/Status.Code.OK|null[0]
+        enum entry OUT_OF_RANGE // io.github.xchacha20_poly1305.kurpc/Status.Code.OUT_OF_RANGE|null[0]
+        enum entry PERMISSION_DENIED // io.github.xchacha20_poly1305.kurpc/Status.Code.PERMISSION_DENIED|null[0]
+        enum entry RESOURCE_EXHAUSTED // io.github.xchacha20_poly1305.kurpc/Status.Code.RESOURCE_EXHAUSTED|null[0]
+        enum entry UNAUTHENTICATED // io.github.xchacha20_poly1305.kurpc/Status.Code.UNAUTHENTICATED|null[0]
+        enum entry UNAVAILABLE // io.github.xchacha20_poly1305.kurpc/Status.Code.UNAVAILABLE|null[0]
+        enum entry UNIMPLEMENTED // io.github.xchacha20_poly1305.kurpc/Status.Code.UNIMPLEMENTED|null[0]
+        enum entry UNKNOWN // io.github.xchacha20_poly1305.kurpc/Status.Code.UNKNOWN|null[0]
+
+        final val entries // io.github.xchacha20_poly1305.kurpc/Status.Code.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<io.github.xchacha20_poly1305.kurpc/Status.Code> // io.github.xchacha20_poly1305.kurpc/Status.Code.entries.<get-entries>|<get-entries>#static(){}[0]
+        final val value // io.github.xchacha20_poly1305.kurpc/Status.Code.value|{}value[0]
+            final fun <get-value>(): kotlin/Int // io.github.xchacha20_poly1305.kurpc/Status.Code.value.<get-value>|<get-value>(){}[0]
+
+        final fun valueOf(kotlin/String): io.github.xchacha20_poly1305.kurpc/Status.Code // io.github.xchacha20_poly1305.kurpc/Status.Code.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<io.github.xchacha20_poly1305.kurpc/Status.Code> // io.github.xchacha20_poly1305.kurpc/Status.Code.values|values#static(){}[0]
+
+        final object Companion { // io.github.xchacha20_poly1305.kurpc/Status.Code.Companion|null[0]
+            final fun fromValue(kotlin/Int): io.github.xchacha20_poly1305.kurpc/Status.Code // io.github.xchacha20_poly1305.kurpc/Status.Code.Companion.fromValue|fromValue(kotlin.Int){}[0]
+        }
+    }
+}
+
+final fun <#A: kotlin/Any?, #B: kotlin/Any?> (io.github.xchacha20_poly1305.kurpc/CallInvoker).io.github.xchacha20_poly1305.kurpc/bidiStreaming(io.github.xchacha20_poly1305.kurpc/MethodDescriptor<#A, #B>, kotlinx.coroutines.flow/Flow<#A>, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): kotlinx.coroutines.flow/Flow<#B> // io.github.xchacha20_poly1305.kurpc/bidiStreaming|bidiStreaming@io.github.xchacha20_poly1305.kurpc.CallInvoker(io.github.xchacha20_poly1305.kurpc.MethodDescriptor<0:0,0:1>;kotlinx.coroutines.flow.Flow<0:0>;io.github.xchacha20_poly1305.kurpc.CallOptions){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?, #B: kotlin/Any?> (io.github.xchacha20_poly1305.kurpc/CallInvoker).io.github.xchacha20_poly1305.kurpc/serverStreaming(io.github.xchacha20_poly1305.kurpc/MethodDescriptor<#A, #B>, #A, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): kotlinx.coroutines.flow/Flow<#B> // io.github.xchacha20_poly1305.kurpc/serverStreaming|serverStreaming@io.github.xchacha20_poly1305.kurpc.CallInvoker(io.github.xchacha20_poly1305.kurpc.MethodDescriptor<0:0,0:1>;0:0;io.github.xchacha20_poly1305.kurpc.CallOptions){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final fun io.github.xchacha20_poly1305.kurpc/Channel(io.github.xchacha20_poly1305.kurpc/WebChannelConfig): io.github.xchacha20_poly1305.kurpc/Channel // io.github.xchacha20_poly1305.kurpc/Channel|Channel(io.github.xchacha20_poly1305.kurpc.WebChannelConfig){}[0]
+final suspend fun <#A: kotlin/Any?, #B: kotlin/Any?> (io.github.xchacha20_poly1305.kurpc/CallInvoker).io.github.xchacha20_poly1305.kurpc/clientStreaming(io.github.xchacha20_poly1305.kurpc/MethodDescriptor<#A, #B>, kotlinx.coroutines.flow/Flow<#A>, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): #B // io.github.xchacha20_poly1305.kurpc/clientStreaming|clientStreaming@io.github.xchacha20_poly1305.kurpc.CallInvoker(io.github.xchacha20_poly1305.kurpc.MethodDescriptor<0:0,0:1>;kotlinx.coroutines.flow.Flow<0:0>;io.github.xchacha20_poly1305.kurpc.CallOptions){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final suspend fun <#A: kotlin/Any?, #B: kotlin/Any?> (io.github.xchacha20_poly1305.kurpc/CallInvoker).io.github.xchacha20_poly1305.kurpc/unary(io.github.xchacha20_poly1305.kurpc/MethodDescriptor<#A, #B>, #A, io.github.xchacha20_poly1305.kurpc/CallOptions = ...): #B // io.github.xchacha20_poly1305.kurpc/unary|unary@io.github.xchacha20_poly1305.kurpc.CallInvoker(io.github.xchacha20_poly1305.kurpc.MethodDescriptor<0:0,0:1>;0:0;io.github.xchacha20_poly1305.kurpc.CallOptions){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]

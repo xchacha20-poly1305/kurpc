@@ -77,7 +77,7 @@ public class TlsTest {
             val transport = Transport.Custom { Connection.tls(server.connect(), "localhost") }
             Channel(ChannelConfig(transport, secure = true)).use { channel ->
                 assertFailsWith<TransportException> {
-                    channel.unary(ECHO, ByteArray(0), CallOptions(timeout = 5.seconds, waitForReady = false))
+                    channel.unary(ECHO, ByteArray(0), NativeCallOptions(timeout = 5.seconds, waitForReady = false))
                 }
             }
         }

@@ -6,11 +6,12 @@ import kotlin.io.encoding.Base64
  * Immutable gRPC metadata.
  *
  * ASCII keys carry [Value.Text]. Keys ending in `-bin` carry [Value.Binary]; those bytes are
- * base64 on the JNI boundary and raw everywhere else. Order is preserved, and the same key may
- * appear more than once.
+ * base64 on transport boundaries and raw in this API. Entries preserve the information the
+ * transport exposes. Fetch can combine repeated text headers and hide headers under CORS;
+ * their original boundaries and wire order cannot be recovered in browsers.
  */
 public class Metadata private constructor(
-    /** Every entry in wire order; a key may repeat. */
+    /** Entries in the order exposed by the transport; a key may repeat. */
     public val entries: List<Pair<String, Value>>,
 ) {
     public sealed class Value {

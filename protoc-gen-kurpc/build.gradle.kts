@@ -22,12 +22,31 @@ kotlin {
     }
 }
 
+val wireCompiler: Configuration by configurations.creating
+
 dependencies {
     implementation(libs.protobuf.java)
     implementation(libs.kotlinpoet)
 
     testImplementation(project(":kurpc"))
     testImplementation(kotlin("test"))
+
+    wireCompiler(libs.wire.compiler)
+}
+
+// Clients generated for Wire messages, apart from the protobuf-java tests: one source set cannot
+// hold both libraries' classes for the same messages.
+val wireTest = testing.suites.register<JvmTestSuite>("wireTest") {
+    useKotlinTest(libs.versions.kotlin)
+    dependencies {
+        implementation(project(":kurpc"))
+        implementation(libs.wire.runtime)
+        // protoc reads `wire/extensions.proto` and the well-known types from this jar.
+        compileOnly(libs.wire.schema)
+    }
+}
+tasks.check {
+    dependsOn(wireTest)
 }
 
 /**
@@ -66,7 +85,38 @@ protobuf {
                 id("kurpc")
             }
         }
+        ofSourceSet(wireTest.name).configureEach {
+            inputs.file(pluginJar.flatMap { it.archiveFile })
+                .withPropertyName("kurpcPlugin")
+                .withPathSensitivity(PathSensitivity.NONE)
+            // Wire generates the messages, in generateWireTestMessages.
+            builtins.clear()
+            plugins {
+                id("kurpc") {
+                    option("runtime=wire")
+                }
+            }
+        }
     }
+}
+
+val generateWireTestMessages = tasks.register<JavaExec>("generateWireTestMessages") {
+    description = "Generates Wire's Kotlin classes for the messages of the wireTest protos."
+    val protos = layout.projectDirectory.dir("src/${wireTest.name}/proto")
+    val output = layout.buildDirectory.dir("generated/wireTestMessages")
+    inputs.dir(protos).withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.dir(output)
+    classpath = wireCompiler
+    mainClass.set("com.squareup.wire.WireCompiler")
+    args(
+        "--proto_path=${protos.asFile}",
+        "--kotlin_out=${output.get().asFile}",
+        // Otherwise Wire generates its own client for every service.
+        "--kotlin_rpc_role=none",
+    )
+}
+kotlin.sourceSets.named(wireTest.name) {
+    kotlin.srcDir(generateWireTestMessages)
 }
 
 // The tests call the test server the way :kurpc's jvmTest does, with :kurpc's host builds.
@@ -92,7 +142,7 @@ mavenPublishing {
     coordinates(group.toString(), "protoc-gen-kurpc", version.toString())
     pom {
         name.set("protoc-gen-kurpc")
-        description.set("protoc plugin generating kurpc clients for protobuf-java messages.")
+        description.set("protoc plugin generating kurpc clients for protobuf-java or Wire messages.")
     }
 }
 

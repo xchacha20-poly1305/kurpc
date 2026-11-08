@@ -27,3 +27,6 @@ secring.*
 .DS_Store
 *.swp
 
+node_modules/
+/web-bridge/dist/
+

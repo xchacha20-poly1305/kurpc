@@ -120,8 +120,8 @@ class GeneratedNamesTest {
 
     private fun verifyJavaType(message: Message) {
         val descriptor = message.descriptorForType
-        val types = JavaTypes(listOf(descriptor.file.toProto()))
+        val types = JavaRuntime(listOf(descriptor.file.toProto()))
         // The expected class comes from protoc, independently of our naming implementation.
-        assertEquals(message.javaClass.canonicalName, types.message(".${descriptor.fullName}").canonicalName)
+        assertEquals(message.javaClass.canonicalName, types.type(".${descriptor.fullName}").canonicalName)
     }
 }

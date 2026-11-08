@@ -1,4 +1,5 @@
 import kurpc.gradle.CargoBuildTask
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -8,6 +9,40 @@ plugins {
     alias(libs.plugins.android.lint)
     alias(libs.plugins.maven.publish)
     id("kurpc.native")
+}
+
+val installWebBridge = tasks.register<Exec>("installWebBridge") {
+    description = "Install wasm web bridge dependencies"
+    workingDir(rootProject.file("web-bridge"))
+    val npm = if (System.getProperty("os.name").startsWith("Windows")) "npm.cmd" else "npm"
+    commandLine(npm, "ci", "--ignore-scripts", "--no-audit", "--no-fund")
+    inputs.files(rootProject.files("web-bridge/package.json", "web-bridge/package-lock.json"))
+    outputs.dir(rootProject.file("web-bridge/node_modules"))
+}
+
+val buildWebBridge = tasks.register<Exec>("buildWebBridge") {
+    description = "Build wasm web bridge"
+    dependsOn(installWebBridge)
+    workingDir(rootProject.file("web-bridge"))
+    commandLine("node", "build.mjs", layout.buildDirectory.dir("generated/webBridge").get().asFile.absolutePath)
+    inputs.dir(rootProject.file("web-bridge/src"))
+    inputs.dir(rootProject.file("web-bridge/licenses"))
+    inputs.files(rootProject.files("web-bridge/build.mjs", "web-bridge/package-lock.json"))
+    outputs.dir(layout.buildDirectory.dir("generated/webBridge"))
+}
+
+val testWebBridge = tasks.register<Exec>("testWebBridge") {
+    description = "Test the web bridge against fake fetch and WebSocket implementations"
+    group = "verification"
+    workingDir(rootProject.file("web-bridge"))
+    commandLine("node", "--test")
+    inputs.dir(rootProject.file("web-bridge/src"))
+    inputs.dir(rootProject.file("web-bridge/test"))
+    val marker = layout.buildDirectory.file("webBridgeTest/passed")
+    outputs.file(marker)
+    doLast {
+        marker.get().asFile.writeText("")
+    }
 }
 
 // jvmMain reads this. Generating it keeps the extraction directory's version in step with the
@@ -51,6 +86,28 @@ kotlin {
         }
     }
 
+    js {
+        // Published debug information must not expose the build machine's directories.
+        compilerOptions.freeCompilerArgs.add("-Xklib-relative-path-base=${rootDir.absolutePath}")
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
+        // webTest replaces fetch and WebSocket, so Node runs it without a browser to install.
+        nodejs()
+    }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        compilerOptions.freeCompilerArgs.add("-Xklib-relative-path-base=${rootDir.absolutePath}")
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
+        nodejs()
+    }
+
     android {
         namespace = "io.github.xchacha20_poly1305.kurpc"
         compileSdk = 37
@@ -80,6 +137,30 @@ kotlin {
     }
 
     sourceSets {
+        val webMain = create("webMain") {
+            dependsOn(commonMain.get())
+            resources.srcDir(rootProject.file("web-bridge/licenses"))
+            kotlin.srcDir(buildWebBridge)
+        }
+        jsMain {
+            dependsOn(webMain)
+        }
+        wasmJsMain {
+            dependsOn(webMain)
+        }
+        val webTest = create("webTest") {
+            dependsOn(commonTest.get())
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
+            }
+        }
+        jsTest {
+            dependsOn(webTest)
+        }
+        wasmJsTest {
+            dependsOn(webTest)
+        }
         commonMain.dependencies {
             // api, because Channel and the typed calls take and return Flow.
             api(libs.kotlinx.coroutines.core)
@@ -108,6 +189,10 @@ kotlin {
     }
 }
 
+tasks.named("check") {
+    dependsOn("jsJar", "wasmJsJar", testWebBridge)
+}
+
 mavenPublishing {
     publishToMavenCentral()
     // CI passes the in-memory key (plan §6.4); local publishToMavenLocal runs unsigned.
@@ -118,6 +203,6 @@ mavenPublishing {
     // The rest of the POM is shared with protoc-gen-kurpc, in the root gradle.properties.
     pom {
         name.set("kurpc")
-        description.set("Kotlin Multiplatform gRPC client backed by a Rust (tonic) native library.")
+        description.set("Kotlin Multiplatform gRPC client for JVM, Android, JS and Wasm browsers.")
     }
 }

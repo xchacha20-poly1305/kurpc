@@ -22,14 +22,13 @@ public data class UnaryResponse(
     }
 }
 
-public data class CallOptions(
+public open class CallOptions(
     public val timeout: Duration? = null,
     public val metadata: Metadata = Metadata.Empty,
-    public val waitForReady: Boolean = true,
 )
 
 /**
- * The calls of a gRPC client, on encoded messages. [Channel] is the implementation; generated
+ * The calls of a gRPC client, on encoded messages. [Channel] adds connection lifetime; generated
  * clients take this interface, so a test can hand them a fake instead of a channel.
  */
 public interface CallInvoker {
@@ -81,6 +80,7 @@ public interface CallInvoker {
     ): Flow<ByteArray>
 }
 
-public expect class Channel public constructor(config: ChannelConfig) : CallInvoker, AutoCloseable {
+/** A shareable RPC client. Each platform provides its own creation function and configuration. */
+public interface Channel : CallInvoker, AutoCloseable {
     override fun close()
 }

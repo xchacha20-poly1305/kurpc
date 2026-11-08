@@ -19,31 +19,16 @@ public final class io/github/xchacha20_poly1305/kurpc/CallInvoker$DefaultImpls {
 	public static synthetic fun unaryCall$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
-public final class io/github/xchacha20_poly1305/kurpc/CallOptions {
+public class io/github/xchacha20_poly1305/kurpc/CallOptions {
 	public fun <init> ()V
-	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-FghU774 ()Lkotlin/time/Duration;
-	public final fun component2 ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
-	public final fun component3 ()Z
-	public final fun copy-k1IrOU0 (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;Z)Lio/github/xchacha20_poly1305/kurpc/CallOptions;
-	public static synthetic fun copy-k1IrOU0$default (Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZILjava/lang/Object;)Lio/github/xchacha20_poly1305/kurpc/CallOptions;
-	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getMetadata ()Lio/github/xchacha20_poly1305/kurpc/Metadata;
 	public final fun getTimeout-FghU774 ()Lkotlin/time/Duration;
-	public final fun getWaitForReady ()Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
-public final class io/github/xchacha20_poly1305/kurpc/Channel : io/github/xchacha20_poly1305/kurpc/CallInvoker, java/lang/AutoCloseable {
-	public fun <init> (Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;)V
-	public fun bidiStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
-	public fun clientStreaming (Ljava/lang/String;Lkotlinx/coroutines/flow/Flow;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun close ()V
-	public fun serverStreaming (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;)Lkotlinx/coroutines/flow/Flow;
-	public fun unary (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun unaryCall (Ljava/lang/String;[BLio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+public abstract interface class io/github/xchacha20_poly1305/kurpc/Channel : io/github/xchacha20_poly1305/kurpc/CallInvoker, java/lang/AutoCloseable {
+	public abstract fun close ()V
 }
 
 public final class io/github/xchacha20_poly1305/kurpc/ChannelClosedException : java/lang/RuntimeException {
@@ -74,6 +59,10 @@ public final class io/github/xchacha20_poly1305/kurpc/ChannelConfig {
 	public final fun getUserAgent ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/Channel_jniKt {
+	public static final fun Channel (Lio/github/xchacha20_poly1305/kurpc/ChannelConfig;)Lio/github/xchacha20_poly1305/kurpc/Channel;
 }
 
 public abstract interface class io/github/xchacha20_poly1305/kurpc/Connection {
@@ -179,6 +168,13 @@ public final class io/github/xchacha20_poly1305/kurpc/MethodKt {
 	public static synthetic fun serverStreaming$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun unary (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun unary$default (Lio/github/xchacha20_poly1305/kurpc/CallInvoker;Lio/github/xchacha20_poly1305/kurpc/MethodDescriptor;Ljava/lang/Object;Lio/github/xchacha20_poly1305/kurpc/CallOptions;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class io/github/xchacha20_poly1305/kurpc/NativeCallOptions : io/github/xchacha20_poly1305/kurpc/CallOptions {
+	public fun <init> ()V
+	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlin/time/Duration;Lio/github/xchacha20_poly1305/kurpc/Metadata;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getWaitForReady ()Z
 }
 
 public final class io/github/xchacha20_poly1305/kurpc/NativeLibraryKt {

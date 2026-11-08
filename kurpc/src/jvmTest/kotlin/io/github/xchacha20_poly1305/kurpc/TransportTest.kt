@@ -14,7 +14,7 @@ public class TransportTest {
         // On Windows this used to throw IllegalArgumentException in JNI before dialing.
         Channel(ChannelConfig(Transport.Unix(path))).use { channel ->
             assertFailsWith<TransportException> {
-                channel.unary(ECHO, byteArrayOf(), CallOptions(waitForReady = false))
+                channel.unary(ECHO, byteArrayOf(), NativeCallOptions(waitForReady = false))
             }
         }
         awaitIdleHandles()

@@ -13,23 +13,18 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.TypeVariableName
+import com.squareup.kotlinpoet.UNIT
 
-private const val KURPC_PACKAGE = "io.github.xchacha20_poly1305.kurpc"
 private val CALL_INVOKER = ClassName(KURPC_PACKAGE, "CallInvoker")
 private val CALL_OPTIONS = ClassName(KURPC_PACKAGE, "CallOptions")
-private val MESSAGE_CODEC = ClassName(KURPC_PACKAGE, "MessageCodec")
 private val METHOD_DESCRIPTOR = ClassName(KURPC_PACKAGE, "MethodDescriptor")
 private val FLOW = ClassName("kotlinx.coroutines.flow", "Flow")
-private val MESSAGE_LITE = ClassName("com.google.protobuf", "MessageLite")
-private val PARSER = ClassName("com.google.protobuf", "Parser")
 
 /** Field numbers in `descriptor.proto`, the steps of a [SourceCodeInfo.Location] path. */
 private const val FILE_SERVICE_FIELD = 6
 private const val SERVICE_METHOD_FIELD = 2
 
 private const val CLIENT_PROPERTY = "invoker"
-private const val CODEC_FUNCTION = "protobufCodec"
 
 private enum class CallKind(val function: String, val streamsRequests: Boolean, val streamsResponses: Boolean) {
     UNARY("unary", streamsRequests = false, streamsResponses = false),
@@ -52,16 +47,16 @@ private enum class CallKind(val function: String, val streamsRequests: Boolean, 
 }
 
 /**
- * `<Service>Kurpc.kt` in the Java package of [file]: the object `<Service>Kurpc` with one
+ * `<Service>Kurpc.kt` in the package [runtime] has for [file]: the object `<Service>Kurpc` with one
  * `MethodDescriptor` per method, and `<Service>Client`, which makes the calls on a `CallInvoker`.
  */
 internal class ServiceGenerator(
     private val file: FileDescriptorProto,
     private val serviceIndex: Int,
-    private val types: JavaTypes,
+    private val runtime: MessageRuntime,
 ) {
     private val service = file.getService(serviceIndex)
-    private val packageName = javaPackage(file)
+    private val packageName = runtime.kotlinPackage(file)
     private val serviceName = if (file.`package`.isEmpty()) service.name else "${file.`package`}.${service.name}"
     private val descriptorsName = ClassName(packageName, "${service.name}Kurpc")
     private val clientName = ClassName(packageName, "${service.name}Client")
@@ -74,7 +69,7 @@ internal class ServiceGenerator(
         .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("%S", "DEPRECATION").build())
         .addType(descriptors())
         .addType(client())
-        .addFunction(codecFunction())
+        .addFunction(runtime.codecFunction())
         .build()
 
     private fun descriptors(): TypeSpec {
@@ -86,20 +81,16 @@ internal class ServiceGenerator(
                     .build(),
             )
         for (method in service.methodList) {
-            val requestType = types.message(method.inputType)
-            val responseType = types.message(method.outputType)
             val property = PropertySpec.builder(
                 propertyName(method),
-                METHOD_DESCRIPTOR.parameterizedBy(requestType, responseType),
+                METHOD_DESCRIPTOR.parameterizedBy(runtime.type(method.inputType), runtime.type(method.outputType)),
             )
                 .initializer(
-                    "%T(%S, %N(%T.parser()), %N(%T.parser()))",
+                    "%T(%S, %L, %L)",
                     METHOD_DESCRIPTOR,
                     "/$serviceName/${method.name}",
-                    CODEC_FUNCTION,
-                    requestType,
-                    CODEC_FUNCTION,
-                    responseType,
+                    runtime.codec(method.inputType),
+                    runtime.codec(method.outputType),
                 )
             if (method.options.deprecated) {
                 property.addAnnotation(deprecated("The method"))
@@ -134,12 +125,13 @@ internal class ServiceGenerator(
 
     private fun clientFunction(method: MethodDescriptorProto, methodIndex: Int): FunSpec {
         val kind = CallKind.of(method)
-        val requestType = types.message(method.inputType)
-        val responseType = types.message(method.outputType)
-        val requestParameter = if (kind.streamsRequests) {
-            ParameterSpec("requests", FLOW.parameterizedBy(requestType))
-        } else {
-            ParameterSpec("request", requestType)
+        val requestType = runtime.type(method.inputType)
+        val responseType = runtime.type(method.outputType)
+        val requestParameter = when {
+            kind.streamsRequests -> ParameterSpec("requests", FLOW.parameterizedBy(requestType))
+            // A request without content needs no argument.
+            requestType == UNIT -> ParameterSpec.builder("request", requestType).defaultValue("%T", UNIT).build()
+            else -> ParameterSpec("request", requestType)
         }
         val builder = FunSpec.builder(propertyName(method))
             .addParameter(requestParameter)
@@ -167,37 +159,6 @@ internal class ServiceGenerator(
             builder.addAnnotation(deprecated("The method"))
         }
         return builder.build()
-    }
-
-    /** Generic over the message type so every descriptor of the file shares one function. */
-    private fun codecFunction(): FunSpec {
-        val message = TypeVariableName("T", MESSAGE_LITE)
-        val codec = TypeSpec.anonymousClassBuilder()
-            .addSuperinterface(MESSAGE_CODEC.parameterizedBy(message))
-            .addFunction(
-                FunSpec.builder("encode")
-                    .addModifiers(KModifier.OVERRIDE)
-                    .addParameter("message", message)
-                    .returns(ByteArray::class)
-                    .addStatement("return message.toByteArray()")
-                    .build(),
-            )
-            .addFunction(
-                FunSpec.builder("decode")
-                    .addModifiers(KModifier.OVERRIDE)
-                    .addParameter("bytes", ByteArray::class)
-                    .returns(message)
-                    .addStatement("return parser.parseFrom(bytes)")
-                    .build(),
-            )
-            .build()
-        return FunSpec.builder(CODEC_FUNCTION)
-            .addModifiers(KModifier.PRIVATE)
-            .addTypeVariable(message)
-            .addParameter("parser", PARSER.parameterizedBy(message))
-            .returns(MESSAGE_CODEC.parameterizedBy(message))
-            .addStatement("return %L", codec)
-            .build()
     }
 
     private fun deprecated(subject: String): AnnotationSpec = AnnotationSpec.builder(Deprecated::class)

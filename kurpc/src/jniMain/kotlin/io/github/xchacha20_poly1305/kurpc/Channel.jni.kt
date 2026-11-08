@@ -27,7 +27,10 @@ private const val FAILURE_TRANSPORT: Int = 1
 private const val FAILURE_CLOSED: Int = 2
 private const val FAILURE_INVALID_ARGUMENT: Int = 3
 
-public actual class Channel actual constructor(config: ChannelConfig) : CallInvoker, AutoCloseable {
+/** Creates a native gRPC channel on JVM or Android. */
+public fun Channel(config: ChannelConfig): Channel = JniChannel(config)
+
+private class JniChannel(config: ChannelConfig) : Channel {
     private val lock = Any()
     private val handle: NativeHandle
     private var closed = false
@@ -99,7 +102,7 @@ public actual class Channel actual constructor(config: ChannelConfig) : CallInvo
                 request,
                 options.metadata.toNativeFlat(),
                 timeoutMillis(options.timeout),
-                options.waitForReady,
+                (options as? NativeCallOptions)?.waitForReady ?: true,
                 UnaryToDeferred(response),
             )
         }
@@ -133,7 +136,7 @@ public actual class Channel actual constructor(config: ChannelConfig) : CallInvo
                 request,
                 options.metadata.toNativeFlat(),
                 timeoutMillis(options.timeout),
-                options.waitForReady,
+                (options as? NativeCallOptions)?.waitForReady ?: true,
                 INITIAL_DEMAND,
                 StreamToChannel(messages),
             )
@@ -154,7 +157,7 @@ public actual class Channel actual constructor(config: ChannelConfig) : CallInvo
         }
     }
 
-    actual override fun close() {
+    override fun close() {
         synchronized(lock) {
             if (closed) {
                 return
