@@ -62,7 +62,7 @@ Add to `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-kurpc = "0.2.0"
+kurpc = "0.3.0"
 
 [libraries]
 kurpc = { module = "io.github.xchacha20-poly1305:kurpc", version.ref = "kurpc" }
@@ -115,9 +115,9 @@ dependencies {
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("io.github.xchacha20-poly1305:kurpc:0.2.0")
+    implementation("io.github.xchacha20-poly1305:kurpc:0.3.0")
     // JVM only:
-    implementation("io.github.xchacha20-poly1305:kurpc-natives-jvm:0.2.0:linux-x86_64")
+    implementation("io.github.xchacha20-poly1305:kurpc-natives-jvm:0.3.0:linux-x86_64")
 }
 ```
 

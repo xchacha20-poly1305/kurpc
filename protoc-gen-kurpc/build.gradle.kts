@@ -22,7 +22,7 @@ kotlin {
     }
 }
 
-val wireCompiler: Configuration by configurations.creating
+val wireCompiler = configurations.create("wireCompiler")
 
 dependencies {
     implementation(libs.protobuf.java)
