@@ -61,7 +61,7 @@ Add to `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-kurpc = "0.3.0"
+kurpc = "0.3.1"
 
 [libraries]
 kurpc = { module = "io.github.xchacha20-poly1305:kurpc", version.ref = "kurpc" }
@@ -114,9 +114,9 @@ dependencies {
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("io.github.xchacha20-poly1305:kurpc:0.3.0")
+    implementation("io.github.xchacha20-poly1305:kurpc:0.3.1")
     // JVM only:
-    implementation("io.github.xchacha20-poly1305:kurpc-natives-jvm:0.3.0:linux-x86_64")
+    implementation("io.github.xchacha20-poly1305:kurpc-natives-jvm:0.3.1:linux-x86_64")
 }
 ```
 
@@ -286,7 +286,7 @@ from this checkout. The example below resolves that local snapshot.
 buildscript {
     repositories { mavenLocal(); mavenCentral() }
     dependencies {
-        classpath("io.github.xchacha20-poly1305:kurpc-wire:0.3.1-SNAPSHOT")
+        classpath("io.github.xchacha20-poly1305:kurpc-wire:0.3.1SNAPSHOT")
     }
 }
 
