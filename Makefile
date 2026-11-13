@@ -1,8 +1,7 @@
 GRADLE ?= ./gradlew
 NPM ?= npm
-# host, all, or a comma-separated list (plan §6.3). Passed to every Gradle call.
+# host, all, or a comma-separated list. Passed to every Gradle call.
 TARGETS ?= host
-# cargo-zigbuild to call. macOS targets need 0.24.0 or newer (plan §6.2).
 ZIGBUILD ?= cargo-zigbuild
 
 GRADLE_ARGS := -Pkurpc.targets=$(TARGETS) -Pkurpc.zigbuild=$(ZIGBUILD)

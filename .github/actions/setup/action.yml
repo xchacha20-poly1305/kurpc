@@ -21,7 +21,7 @@ runs:
         distribution: temurin
         java-version: "21"
         cache: gradle
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
         node-version: "24"
         cache: npm
@@ -37,9 +37,8 @@ runs:
     - uses: mlugg/setup-zig@v2
       if: inputs.zig == 'true'
       with:
-        version: 0.17.0
+        version: 0.17.1
     - name: cargo-zigbuild
       if: inputs.zig == 'true'
       shell: bash
-      # 0.24.0 includes the macOS linker argument fix for zig 0.16 (plan §6.2).
-      run: cargo install cargo-zigbuild --locked --version 0.24.0
+      run: cargo install cargo-zigbuild --locked --version 0.24.1
