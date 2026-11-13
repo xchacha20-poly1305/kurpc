@@ -1,6 +1,0 @@
-syntax = "proto3";
-package kurpc.test.naming.case1;
-// Compiled by both protobuf-java and kurpc to check the actual Java naming rules.
-enum EnumClash { ZERO = 0; }
-message Payload { string value = 1; }
-service Naming1 { rpc Echo(Payload) returns (Payload); }

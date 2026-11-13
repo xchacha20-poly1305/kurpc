@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "kurpc"
 include(":kurpc")
-include(":protoc-gen-kurpc")
+include(":kurpc-wire")

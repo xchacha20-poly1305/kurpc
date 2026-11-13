@@ -1,0 +1,4 @@
+[target.aarch64-pc-windows-gnullvm]
+# Zig does not link libunwind from rustc's --unwindlib=libunwind alone.
+# JNI panic recovery requires the unwinder, so link it explicitly.
+rustflags = ["-C", "link-arg=-lunwind"]

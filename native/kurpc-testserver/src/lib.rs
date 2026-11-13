@@ -6,6 +6,8 @@
 //! | `/kurpc.test.Test/Echo`     | Returns the request body; echoes request metadata as headers    |
 //! | `/kurpc.test.Test/Fail`     | Body `<code>:<message>`; ends with that status                  |
 //! | `/kurpc.test.Test/Sleep`    | Sleeps for the body's decimal milliseconds, then returns it     |
+//! | `/kurpc.test.Test/EchoServerStream` | Returns the request body as a one-message server stream |
+//! | `/kurpc.test.Test/EchoClientStream` | Drains the request stream and returns its first message |
 //! | `/kurpc.test.Test/Count`    | Server stream. `<n>` sends n messages; `<n>:<k>` errors after k |
 //! | `/kurpc.test.Test/Infinite` | Server stream until the client cancels                          |
 //! | `/kurpc.test.Test/Collect`  | Client stream; returns `<count>:<bytes>`. A `fail` message ends |
@@ -286,6 +288,29 @@ impl Service<http::Request<Body>> for TestService {
                         service_fn(move |_request| {
                             let scheme = scheme.clone();
                             async move { Ok(Response::new(scheme)) }
+                        }),
+                        request,
+                    )
+                    .await
+                }
+                Some("EchoServerStream") => {
+                    grpc.server_streaming(
+                        service_fn(|request: Request<Bytes>| async move {
+                            Ok(Response::new(tokio_stream::iter([
+                                Ok(request.into_inner()),
+                            ])))
+                        }),
+                        request,
+                    )
+                    .await
+                }
+                Some("EchoClientStream") => {
+                    grpc.client_streaming(
+                        service_fn(|request: Request<Streaming<Bytes>>| async move {
+                            let mut messages = request.into_inner();
+                            let first = messages.message().await?.unwrap_or_default();
+                            while messages.message().await?.is_some() {}
+                            Ok(Response::new(first))
                         }),
                         request,
                     )

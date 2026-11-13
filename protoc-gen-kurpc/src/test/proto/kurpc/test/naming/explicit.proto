@@ -1,8 +1,0 @@
-syntax = "proto3";
-package kurpc.test.naming.explicit;
-option java_package = "kurpc.test.naming.when";
-option java_outer_classname = "custom_API2";
-message object {
-  message when { string value = 1; }
-}
-service ExplicitNames { rpc In(object.when) returns (object.when); }

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package kurpc.test.naming.multiple;
+option java_package = "kurpc.test.naming.is";
+option java_multiple_files = true;
+option java_outer_classname = "IgnoredContainer";
+// Same simple name as the imported nested type; also collides with a Kotlin keyword.
+message WhenPayload { string value = 1; }
+// Compete with the generator's own imports.
+message CallOptions { string value = 1; }
+message Flow { string value = 1; }
+import "kurpc/test/naming/explicit.proto";
+service ImportedNames {
+  rpc In(kurpc.test.naming.explicit.ObjectPayload.WhenPayload) returns (WhenPayload);
+  rpc Options(CallOptions) returns (CallOptions);
+  rpc Stream(stream Flow) returns (stream Flow);
+}

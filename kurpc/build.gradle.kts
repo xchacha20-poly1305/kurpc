@@ -200,7 +200,7 @@ mavenPublishing {
         signAllPublications()
     }
     coordinates(group.toString(), "kurpc", version.toString())
-    // The rest of the POM is shared with protoc-gen-kurpc, in the root gradle.properties.
+    // The rest of the POM is shared with kurpc-wire, in the root gradle.properties.
     pom {
         name.set("kurpc")
         description.set("Kotlin Multiplatform gRPC client for JVM, Android, JS and Wasm browsers.")

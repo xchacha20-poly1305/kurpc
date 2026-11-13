@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package kurpc.test;
+
+// Wire generates top-level messages independently of java_outer_classname.
+option java_package = "io.github.xchacha20_poly1305.kurpc.wire.test";
+
+message Payload {
+  string text = 1;
+}
+
+// The methods of kurpc-testserver that answer with what they receive.
+service Test {
+  // Returns the request.
+  rpc Echo(Payload) returns (Payload);
+
+  // Echoes every message.
+  rpc Chat(stream Payload) returns (stream Payload);
+
+  rpc Count(Payload) returns (stream Payload);
+
+  rpc Collect(stream Payload) returns (Payload);
+
+  rpc EchoServerStream(Payload) returns (stream Payload);
+  rpc EchoClientStream(stream Payload) returns (Payload);
+}

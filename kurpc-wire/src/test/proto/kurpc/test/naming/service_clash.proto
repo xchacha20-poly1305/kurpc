@@ -1,0 +1,5 @@
+syntax = "proto3";
+package kurpc.test.naming.case2;
+// Compiled by Wire and kurpc-wire to check generated type references.
+message Payload { string value = 1; }
+service ServiceClash { rpc Echo(Payload) returns (Payload); }

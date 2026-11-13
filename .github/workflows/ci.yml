@@ -21,7 +21,7 @@ jobs:
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test --workspace
       # jvmTest on JDK 21 and (provisioned) JDK 8, Android Lint, ABI dump, generated stubs.
-      - run: ./gradlew :kurpc:check :protoc-gen-kurpc:check
+      - run: ./gradlew :kurpc:check :kurpc-wire:check
 
   cross:
     runs-on: ubuntu-latest

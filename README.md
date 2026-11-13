@@ -6,10 +6,9 @@ gRPC-Web over `fetch`, and `grpc-websockets` for request streams and, when asked
 
 kurpc moves raw message bytes: you pass the encoded request and receive the encoded response,
 so any protobuf runtime works (protobuf-java, protobuf-javalite, Wire,
-kotlinx-serialization-protobuf, ...). For protobuf-java, protobuf-javalite and
-[Wire](https://github.com/square/wire) messages, the `protoc-gen-kurpc` plugin generates typed
-clients ([Generated clients](#generated-clients)); the Wire ones are common Kotlin and also run
-in browsers.
+kotlinx-serialization-protobuf, ...). For
+[Wire](https://github.com/square/wire) messages, the `kurpc-wire` schema handler generates typed
+clients ([Generated clients](#generated-clients)) in common Kotlin for all supported platforms.
 
 - Unary, server-streaming, client-streaming and bidirectional calls as `suspend` functions and
   `Flow`s. Cancelling the coroutine cancels the call.
@@ -203,7 +202,7 @@ Use `WebSocket` for many long-lived subscriptions to an HTTP/1.1 endpoint, `Fetc
 transfers and for HTTP/2 or HTTP/3 endpoints.
 
 Browser channels support the same four call methods, `MessageCodec`, and `MethodDescriptor`.
-Clients generated for Wire messages ([Wire messages](#wire-messages)) run here; other callers
+Clients generated for Wire messages ([generated clients](#generated-clients)) run here; other callers
 supply their own encoded messages or codecs. Streams are cold, and input streams are collected concurrently with responses.
 Cancellation aborts the request; `close()` terminates pending calls and rejects new calls.
 Deadlines cover the whole call. Interrupted calls are not replayed automatically.
@@ -240,9 +239,9 @@ the response with your protobuf runtime:
 ```kotlin
 val reply: ByteArray = channel.unary(
     method = "/helloworld.Greeter/SayHello",
-    request = HelloRequest.newBuilder().setName("kurpc").build().toByteArray(),
+    request = HelloRequest(name = "kurpc").encode(),
 )
-println(HelloReply.parseFrom(reply).message)
+println(HelloReply.ADAPTER.decode(reply).message)
 ```
 
 `unaryCall` returns the response headers and trailers along with the message:
@@ -260,7 +259,7 @@ call, and cancelling the collection cancels the call.
 ```kotlin
 // Server streaming
 channel.serverStreaming("/example.Feed/Subscribe", request).collect { bytes ->
-    println(Event.parseFrom(bytes))
+    println(Event.ADAPTER.decode(bytes))
 }
 
 // Client streaming: sends every element, half-closes, returns the single response.
@@ -271,133 +270,69 @@ val summary: ByteArray = channel.clientStreaming(
 
 // Bidirectional streaming: requests are sent while responses are collected.
 channel.bidiStreaming("/example.Chat/Talk", outgoing).collect { bytes ->
-    println(ChatMessage.parseFrom(bytes))
+    println(ChatMessage.ADAPTER.decode(bytes))
 }
 ```
 
 ### Generated clients
 
-`protoc-gen-kurpc` is a protoc plugin that generates a client per service for the classes of
-protobuf-java or protobuf-javalite, or of Wire ([Wire messages](#wire-messages)); proto2 and
-proto3, editions are not supported. With the
-[protobuf Gradle plugin](https://github.com/google/protobuf-gradle-plugin), in a JVM or Android
-module:
+`kurpc-wire` is a Wire custom schema handler. Wire generates Kotlin messages and kurpc
+clients in the same build, for JVM, Android, JS and Wasm:
+
+Before the first release of the handler, run `./gradlew :kurpc-wire:publishToMavenLocal`
+from this checkout. The example below resolves that local snapshot.
 
 ```kotlin
-// build.gradle.kts
-import com.google.protobuf.gradle.id
-
-plugins {
-    id("com.google.protobuf") version "0.10.0"
+buildscript {
+    repositories { mavenLocal(); mavenCentral() }
+    dependencies {
+        classpath("io.github.xchacha20-poly1305:kurpc-wire:0.3.1-SNAPSHOT")
+    }
 }
 
+plugins {
+    id("com.squareup.wire") version "7.2.1"
+}
+
+// In a KMP module, put these dependencies in commonMain.
 dependencies {
     implementation(libs.kurpc)
-    implementation("com.google.protobuf:protobuf-javalite:4.36.2")
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:4.36.2"
-    }
-    plugins {
-        id("kurpc") {
-            // The `all` jar is self-contained; the plugin runs it with `java -jar`.
-            artifact = "io.github.xchacha20-poly1305:protoc-gen-kurpc:0.1.1:all@jar"
-        }
-    }
-    generateProtoTasks {
-        all().configureEach {
-            builtins {
-                named("java") { option("lite") }
-            }
-            plugins {
-                id("kurpc")
-            }
-        }
-    }
-}
-```
-
-For `service Greeter` in package `helloworld`, the plugin writes `GreeterKurpc.kt` into the
-Java package of the proto file, with:
-
-- `GreeterClient(invoker: CallInvoker)`: one function per method. Unary and client-streaming
-  methods are `suspend` functions; server-streaming and bidirectional methods return a `Flow`.
-  Every function takes an optional `CallOptions`.
-- `GreeterKurpc`: `SERVICE_NAME` and a `MethodDescriptor` per method (`GreeterKurpc.sayHello`).
-
-```kotlin
-val greeter = GreeterClient(channel)
-val reply: HelloReply = greeter.sayHello(
-    HelloRequest.newBuilder().setName("kurpc").build(),
-    CallOptions(timeout = 5.seconds),
-)
-```
-
-`Channel` implements `CallInvoker`. A test can pass its own `CallInvoker` to the generated client
-instead of opening a channel.
-
-The descriptors also work without the generated client, through the typed `unary`,
-`serverStreaming`, `clientStreaming` and `bidiStreaming` extensions of `CallInvoker`, for
-example in a wrapper that retries every stream the same way:
-
-```kotlin
-fun <Request, Response> CallInvoker.retrying(
-    method: MethodDescriptor<Request, Response>,
-    request: Request,
-): Flow<Response> = serverStreaming(method, request).retry { it is TransportException }
-```
-
-A response that its message class cannot parse fails the call with a `StatusException` of
-`INTERNAL`, whose cause is the parser's exception.
-
-Outside Gradle, run the jar through a wrapper script, for example
-`protoc --plugin=protoc-gen-kurpc=./protoc-gen-kurpc.sh --kurpc_out=src/main/kotlin ...`, where
-the script runs `java -jar protoc-gen-kurpc-0.1.1-all.jar "$@"`.
-
-#### Wire messages
-
-With the option `runtime=wire` the clients are written for the classes of Wire's Kotlin
-generator instead. They use only kurpc's and Wire's common API, so they compile for every
-target both support, JS and Wasm included. Wire generates the messages and `protoc-gen-kurpc`
-the clients, from the same `.proto` files:
-
-```kotlin
-plugins {
-    id("com.squareup.wire") version "7.1.2"
+    implementation("com.squareup.wire:wire-runtime:7.2.1")
 }
 
 wire {
-    kotlin {
-        // Wire would otherwise generate a `GreeterClient` of its own for every service.
-        rpcRole = "none"
+    kotlin { rpcRole = "none" }
+    custom {
+        schemaHandlerFactoryClass.set("io.github.xchacha20_poly1305.kurpc.wire.KurpcSchemaHandlerFactory")
     }
 }
 ```
 
-```kotlin
-// Where the protobuf Gradle plugin runs protoc:
-plugins {
-    id("kurpc") {
-        option("runtime=wire")
-    }
-}
-```
-
-The generated file goes into the package Wire uses for the proto file (`wire.wire_package`,
-else `java_package`, else the proto package) and is otherwise the same, with Wire's types:
+For each service, the handler generates `<Service>Client(invoker)` and `<Service>Kurpc`.
+The client exposes suspend functions for unary and client-streaming calls, and Flow for
+server-streaming and bidirectional calls. Every method accepts optional `CallOptions`.
+The descriptor object exposes `SERVICE_NAME` and a `MethodDescriptor` per method, usable
+with kurpc's typed `unary`, `serverStreaming`, `clientStreaming` and `bidiStreaming` calls.
 
 ```kotlin
 val greeter = GreeterClient(channel)
-val reply: HelloReply = greeter.sayHello(HelloRequest(name = "kurpc"))
+val reply = greeter.sayHello(HelloRequest(name = "kurpc"), CallOptions(timeout = 5.seconds))
 ```
 
-Where Wire has no class for a well-known type, the client takes Wire's Kotlin type:
-`google.protobuf.Empty` is `Unit` (and the request argument may be left out), a wrapper such as
-`StringValue` is its nullable value, `Timestamp` is `com.squareup.wire.Instant`. The plugin
-follows Wire's default class names; `nameSuffix`, `mutableTypes` and `javaInterop` builds with a
-message called `Builder` name classes differently and are not supported.
+The generated package and message names follow Wire's Kotlin generator. Use its default
+immutable message configuration without `nameSuffix`, `javaInterop` or `mutableTypes`.
+Well-known types use Wire's representations: Empty is Unit, wrappers are nullable Kotlin
+values, Timestamp is Wire Instant, and Any is AnyMessage. Empty requests default to Unit.
+RPC paths preserve the proto package and method names. Comments and deprecations are retained;
+conflicting generated class names and Kotlin method names fail generation.
+
+`Channel` implements `CallInvoker`; tests can supply a fake invoker. Invalid response bytes
+fail with an INTERNAL `StatusException` whose cause is the decoding exception.
+
+For Wire's command-line compiler, include `kurpc-wire` and its dependencies on the JVM
+classpath and pass `--kotlin_rpc_role=none`, `--custom_out=<directory>` and
+`--schema_handler_factory_class=io.github.xchacha20_poly1305.kurpc.wire.KurpcSchemaHandlerFactory`.
+The old protoc plugin and protobuf-java generator backend have been removed.
 
 ### Deadlines and metadata
 
@@ -508,7 +443,7 @@ Android SDK with the NDK version from `gradle/libs.versions.toml`.
 
 ```sh
 ./gradlew :kurpc:check        # JVM tests, Android Lint, ABI, web bridge and web channel tests on Node
-./gradlew :protoc-gen-kurpc:check  # protoc plugin; its tests call the test server through generated clients
+./gradlew :kurpc-wire:check  # Wire schema handler and generated-client integration tests
 cargo test --workspace         # Rust tests
 make publish_local             # publishToMavenLocal for the host platform
 make native_all                # every natives jar and the AAR; needs cargo-zigbuild

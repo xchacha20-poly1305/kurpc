@@ -21,18 +21,18 @@ aar:
 
 test:
 	cargo test --workspace
-	$(GRADLE) $(GRADLE_ARGS) :kurpc:jvmTest :protoc-gen-kurpc:test
+	$(GRADLE) $(GRADLE_ARGS) :kurpc:jvmTest :kurpc-wire:test
 
 lint:
 	cargo fmt --check
 	cargo clippy --workspace --all-targets -- -D warnings
 	$(GRADLE) $(GRADLE_ARGS) :kurpc:lint :kurpc:checkKotlinAbi
 
-# Everything CI's check job runs: Rust checks, jvmTest on JDK 21 and 8, Lint, ABI, the protoc
-# plugin's tests.
+# Everything CI's check job runs: Rust checks, jvmTest on JDK 21 and 8, Lint, ABI, the Wire
+# schema handler tests.
 check: lint
 	cargo test --workspace
-	$(GRADLE) $(GRADLE_ARGS) :kurpc:check :protoc-gen-kurpc:check
+	$(GRADLE) $(GRADLE_ARGS) :kurpc:check :kurpc-wire:check
 
 # Upgrade web-bridge dependencies to latest stable versions, keeping exact version pins.
 update_npm:

@@ -25,7 +25,7 @@ jobs:
       # would leave it waiting for a manual release.
       - run: >-
           ./gradlew -Pkurpc.targets=all
-          :kurpc:check :protoc-gen-kurpc:check publishAndReleaseToMavenCentral
+          :kurpc:check :kurpc-wire:check publishAndReleaseToMavenCentral
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

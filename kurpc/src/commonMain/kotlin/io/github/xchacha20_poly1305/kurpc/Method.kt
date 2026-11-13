@@ -12,7 +12,7 @@ public interface MessageCodec<T> {
 
 /**
  * One RPC of a service: its [path] (`/<package>.<Service>/<Method>`) and how its messages are
- * encoded. `protoc-gen-kurpc` generates one per method; the typed calls below take it.
+ * encoded. `kurpc-wire` generates one per method; the typed calls below take it.
  */
 public class MethodDescriptor<Request, Response>(
     public val path: String,

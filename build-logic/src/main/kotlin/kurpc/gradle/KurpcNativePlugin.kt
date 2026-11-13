@@ -42,6 +42,7 @@ class KurpcNativePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val workspace = project.rootProject.layout.projectDirectory
         val sources = project.files(
+            workspace.dir(".cargo"),
             workspace.dir("native"),
             workspace.file("Cargo.lock"),
             workspace.file("Cargo.toml"),
