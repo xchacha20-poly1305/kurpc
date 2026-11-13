@@ -279,12 +279,11 @@ channel.bidiStreaming("/example.Chat/Talk", outgoing).collect { bytes ->
 `kurpc-wire` is a Wire custom schema handler. Wire generates Kotlin messages and kurpc
 clients in the same build, for JVM, Android, JS and Wasm:
 
-Before the first release of the handler, run `./gradlew :kurpc-wire:publishToMavenLocal`
-from this checkout. The example below resolves that local snapshot.
-
 ```kotlin
 buildscript {
-    repositories { mavenLocal(); mavenCentral() }
+    repositories { 
+        mavenCentral() 
+    }
     dependencies {
         classpath("io.github.xchacha20-poly1305:kurpc-wire:0.3.1")
     }
@@ -332,7 +331,6 @@ fail with an INTERNAL `StatusException` whose cause is the decoding exception.
 For Wire's command-line compiler, include `kurpc-wire` and its dependencies on the JVM
 classpath and pass `--kotlin_rpc_role=none`, `--custom_out=<directory>` and
 `--schema_handler_factory_class=io.github.xchacha20_poly1305.kurpc.wire.KurpcSchemaHandlerFactory`.
-The old protoc plugin and protobuf-java generator backend have been removed.
 
 ### Deadlines and metadata
 
