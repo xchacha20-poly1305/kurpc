@@ -59,8 +59,10 @@ jobs:
         include:
           - api: 21
             arch: x86
-          - api: 35
+            target: default
+          - api: "37.2"
             arch: x86_64
+            target: google_apis_ps16k
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -77,6 +79,7 @@ jobs:
         with:
           api-level: ${{ matrix.api }}
           arch: ${{ matrix.arch }}
+          target: ${{ matrix.target }}
           script: ./gradlew -Pkurpc.targets=android-${{ matrix.arch }} :kurpc:connectedAndroidDeviceTest
 
   snapshot:
