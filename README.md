@@ -452,5 +452,6 @@ The browser bridge is built and packaged by Gradle. See
 
 ## License
 
-[MIT](./LICENSE). The browser artifacts embed Babel runtime helpers (MIT); their license is
-included with them.
+[MIT](./LICENSE). The browser artifacts embed Babel runtime helpers (MIT) and the JVM native
+artifacts embed [tonic](https://github.com/hyperium/tonic) (MIT); their licenses are included
+with them.

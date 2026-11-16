@@ -101,6 +101,9 @@ internal fun registerDesktopNatives(
             archiveClassifier.set(target.classifier)
             destinationDirectory.set(project.layout.buildDirectory.dir("libs"))
             from(build.flatMap { it.outputDirectory })
+            from(project.rootProject.layout.projectDirectory.dir("native/licenses")) {
+                into("META-INF/licenses")
+            }
         }
     }
     project.tasks.register("nativesJars") {
