@@ -1,5 +1,10 @@
 # kurpc
 
+> [!WARNING]
+> This repository is deprecated:
+> 1. This bridge is crazy.
+> 2. [wire](https://github.com/square/wire) is useful enough.
+
 Kotlin Multiplatform RPC client. JVM and Android use a native library built from
 [grpc-rust](https://github.com/grpc/grpc-rust) (tonic) over JNI. Browser JS and Wasm use
 gRPC-Web over `fetch`, and `grpc-websockets` for request streams and, when asked, server streams.
